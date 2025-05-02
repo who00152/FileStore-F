@@ -1,5 +1,5 @@
-#Codeflix_Botz
-#rohit_1888 on Tg
+#Aɴɪᴍᴇ Lᴏʀᴅ
+#Who-Am-I
 
 import motor, asyncio
 import motor.motor_asyncio
@@ -173,7 +173,7 @@ class Rohit:
                 upsert=True
             )
         except Exception as e:
-            print(f"[DB ERROR] Failed to add user to request list: {e}")
+            print(f"[ᴅʙ ᴇʀʀᴏʀ] ꜰᴀɪʟᴇᴅ ᴛᴏ ᴀᴅᴅ ᴜꜱᴇʀ ᴛᴏ ʀᴇǫᴜᴇꜱᴛ ʟɪꜱᴛ: {e}")
 
 
     # Method 2: Remove a user from the channel set
@@ -193,7 +193,7 @@ class Rohit:
             })
             return bool(found)
         except Exception as e:
-            print(f"[DB ERROR] Failed to check request list: {e}")
+            print(f"[ᴅʙ ᴇʀʀᴏʀ] ꜰᴀɪʟᴇᴅ ᴛᴏ ᴄʜᴇᴄᴋ ʀᴇǫᴜᴇꜱᴛ ʟɪꜱᴛ: {e}")
             return False  
 
 
