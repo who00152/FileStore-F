@@ -1,5 +1,3 @@
-#(©)Codexbotz
-
 from pyrogram import Client, filters, enums
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from bot import Bot
@@ -29,6 +27,16 @@ async def close_button(client, query):
     user_id = query.from_user.id
     if user_id in active_commands:
         active_commands[user_id].cancel()
+        await query.message.reply("✅ কমান্ড বন্ধ করা হয়েছে।")  # নিশ্চিতকরণ মেসেজ
+    await delete_with_animation(query.message)
+
+@Bot.on_callback_query(filters.regex("^stop$"))
+async def stop_button(client, query):
+    """ꜱᴛᴏᴘ ʙᴜᴛᴛᴏɴ ʜᴀɴᴅʟᴇʀ"""
+    user_id = query.from_user.id
+    if user_id in active_commands:
+        active_commands[user_id].cancel()
+        await query.message.reply("✅ ব্যাচ প্রক্রিয়া বন্ধ করা হয়েছে।")  # নিশ্চিতকরণ মেসেজ
     await delete_with_animation(query.message)
 
 @Bot.on_message(filters.private & admin & filters.command('batch'))
@@ -140,16 +148,22 @@ async def custom_batch(client: Client, message: Message):
     try:
         await message.reply(
             "ꜱᴇɴᴅ ᴀʟʟ ᴍᴇꜱꜱᴀɢᴇꜱ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ɪɴᴄʟᴜᴅᴇ ɪɴ ʙᴀᴛᴄʜ.\n\nᴛʏᴘᴇ 'STOP' ᴡʜᴇɴ ʏᴏᴜ'ʀᴇ ᴅᴏɴᴇ.",
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]])
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")],
+                [InlineKeyboardButton("STOP", callback_data="stop")]
+            ])
         )
 
         while True:
             try:
                 user_msg = await client.ask(
                     chat_id=user_id,
-                    text="ᴡᴀɪᴛɪɴɢ ꜰᴏʀ ꜰɪʟᴇꜱ/ᴍᴇꜱꜱᴀɢᴇꜱ...\nᴛʏᴘᴇ *ᴄʟᴏsᴇ* ᴛᴏ ꜰɪɴɪꜱʜ.",
+                    text="ᴡᴀɪᴛɪɴɢ ꜰᴏʀ ꜰɪʟᴇꜱ/ᴍᴇꜱꜱᴀɢᴇꜱ...\nᴛʏᴘᴇ *STOP* ᴛᴏ ꜰɪɴɪꜱʹ.",
                     timeout=60,
-                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]])
+                    reply_markup=InlineKeyboardMarkup([
+                        [InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")],
+                        [InlineKeyboardButton("STOP", callback_data="stop")]
+                    ])
                 )
                 
                 if user_msg.text and user_msg.text.strip().upper() == "STOP":
