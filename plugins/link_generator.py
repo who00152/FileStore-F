@@ -26,8 +26,13 @@ async def close_button(client, query):
     """ᴄʟᴏꜱᴇ ʙᴜᴛᴛᴏɴ ʜᴀɴᴅʟᴇʀ"""
     user_id = query.from_user.id
     if user_id in active_commands:
-        active_commands[user_id].cancel()
-        await query.message.reply("✅ কমান্ড বন্ধ করা হয়েছে।")  # নিশ্চিতকরণ মেসেজ
+        try:
+            active_commands[user_id].cancel()
+            await query.message.reply("✅ কমান্ড বন্ধ করা হয়েছে।")
+        except Exception as e:
+            await query.message.reply(f"❌ কমান্ড বন্ধ করতে সমস্যা: {e}")
+        finally:
+            active_commands.pop(user_id, None)
     await delete_with_animation(query.message)
 
 @Bot.on_callback_query(filters.regex("^stop$"))
@@ -35,8 +40,13 @@ async def stop_button(client, query):
     """ꜱᴛᴏᴘ ʙᴜᴛᴛᴏɴ ʜᴀɴᴅʟᴇʀ"""
     user_id = query.from_user.id
     if user_id in active_commands:
-        active_commands[user_id].cancel()
-        await query.message.reply("✅ ব্যাচ প্রক্রিয়া বন্ধ করা হয়েছে।")  # নিশ্চিতকরণ মেসেজ
+        try:
+            active_commands[user_id].cancel()
+            await query.message.reply("✅ ব্যাচ প্রক্রিয়া বন্ধ করা হয়েছে।")
+        except Exception as e:
+            await query.message.reply(f"❌ ব্যাচ বন্ধ করতে সমস্যা: {e}")
+        finally:
+            active_commands.pop(user_id, None)
     await delete_with_animation(query.message)
 
 @Bot.on_message(filters.private & admin & filters.command('batch'))
@@ -54,7 +64,7 @@ async def batch(client: Client, message: Message):
                     chat_id=user_id,
                     filters=(filters.forwarded | (filters.text & ~filters.forwarded)),
                     timeout=60,
-                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]])
+                    reply_markup=InlineKeyboardMarkup([])  # কোনো বাটন নেই
                 )
                 f_msg_id = await get_message_id(client, first_message)
                 if f_msg_id: break
@@ -72,7 +82,7 @@ async def batch(client: Client, message: Message):
                     chat_id=user_id,
                     filters=(filters.forwarded | (filters.text & ~filters.forwarded)),
                     timeout=60,
-                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]])
+                    reply_markup=InlineKeyboardMarkup([])  # কোনো বাটন নেই
                 )
                 s_msg_id = await get_message_id(client, second_message)
                 if s_msg_id: break
@@ -113,7 +123,7 @@ async def link_generator(client: Client, message: Message):
                     chat_id=user_id,
                     filters=(filters.forwarded | (filters.text & ~filters.forwarded)),
                     timeout=60,
-                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]])
+                    reply_markup=InlineKeyboardMarkup([])  # কোনো বাটন নেই
                 )
                 msg_id = await get_message_id(client, channel_message)
                 if msg_id: break
@@ -147,9 +157,8 @@ async def custom_batch(client: Client, message: Message):
     
     try:
         await message.reply(
-            "ꜱᴇɴᴅ ᴀʟʟ ᴍᴇꜱꜱᴀɢᴇꜱ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ɪɴᴄʟᴜᴅᴇ ɪɴ ʙᴀᴛᴄʜ.\n\nᴛʏᴘᴇ 'STOP' ᴡʜᴇɴ ʏᴏᴜ'ʀᴇ ᴅᴏɴᴇ.",
+            "ꜱᴇɴᴅ ᴀʟʟ ᴍᴇꜱꜱᴀɢᴇꜱ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ɪɴᴄʟᴜᴅᴇ ɪɴ ʙᴀᴛᴄʜ.\n\nᴄʟɪᴄᴋ 'STOP' ᴡʜᴇɴ ʏᴏᴜ'ʀᴇ ᴅᴏɴᴇ.",
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")],
                 [InlineKeyboardButton("STOP", callback_data="stop")]
             ])
         )
@@ -158,22 +167,18 @@ async def custom_batch(client: Client, message: Message):
             try:
                 user_msg = await client.ask(
                     chat_id=user_id,
-                    text="ᴡᴀɪᴛɪɴɢ ꜰᴏʀ ꜰɪʟᴇꜱ/ᴍᴇꜱꜱᴀɢᴇꜱ...\nᴛʏᴘᴇ *STOP* ᴛᴏ ꜰɪɴɪꜱʹ.",
+                    text="ᴡᴀɪᴛɪɴɢ ꜰᴏʀ ꜰɪʟᴇꜱ/ᴍᴇꜱꜱᴀɢᴇꜱ...\nᴄʟɪᴄᴋ *STOP* ᴛᴏ ꜰɪɴɪꜱʹ.",
                     timeout=60,
                     reply_markup=InlineKeyboardMarkup([
-                        [InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")],
                         [InlineKeyboardButton("STOP", callback_data="stop")]
                     ])
                 )
                 
-                if user_msg.text and user_msg.text.strip().upper() == "STOP":
-                    break
-
                 sent = await user_msg.copy(client.db_channel.id, disable_notification=True)
                 collected.append(sent.id)
                 
             except CancelledError:
-                return
+                break
             except Exception as e:
                 await message.reply(f"❌ ꜰᴀɪʟᴇᴅ ᴛᴏ ꜱᴛᴏʀᴇ ᴀ ᴍᴇꜱꜱᴀɢᴇ:\n<code>{e}</code>")
                 continue
