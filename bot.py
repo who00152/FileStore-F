@@ -6,12 +6,12 @@ from pyrogram import Client
 from pyrogram.enums import ParseMode
 import sys
 from datetime import datetime
-#rohit_1888 on Tg
+#Aɴɪᴍᴇ Lᴏʀᴅ
 from config import *
 
 
 name ="""
- BY CODEFLIX BOTS
+ BY Aɴɪᴍᴇ Lᴏʀᴅ
 """
 
 
@@ -41,17 +41,17 @@ class Bot(Client):
             await test.delete()
         except Exception as e:
             self.LOGGER(__name__).warning(e)
-            self.LOGGER(__name__).warning(f"Make Sure bot is Admin in DB Channel, and Double check the CHANNEL_ID Value, Current Value {CHANNEL_ID}")
-            self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/CodeflixSupport for support")
+            self.LOGGER(__name__).warning(f"Make Sure bot is Admin in DB ᴍᴀᴋᴇ ꜱᴜʀᴇ ʙᴏᴛ ɪꜱ ᴀᴅᴍɪɴ ɪɴ ᴅʙ ᴄʜᴀɴɴᴇʟ, ᴀɴᴅ ᴅᴏᴜʙʟᴇ ᴄʜᴇᴄᴋ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ_ɪᴅ ᴠᴀʟᴜᴇ, ᴄᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ {CHANNEL_ID}")
+            self.LOGGER(__name__).info("\nʙᴏᴛ ꜱᴛᴏᴘᴘᴇᴅ. ᴊᴏɪɴ ʜᴛᴛᴘꜱ://ᴛ.ᴍᴇ/ꜱᴜᴘᴘᴏʀᴛ ꜰᴏʀ ꜱᴜᴘᴘᴏʀᴛ")
             sys.exit()
 
         self.set_parse_mode(ParseMode.HTML)
-        self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by \nhttps://t.me/CodeflixSupport")
-        self.LOGGER(__name__).info(f"""BOT DEPLOYED BY @CODEFLIX_BOTS""")
+        self.LOGGER(__name__).info(f"ʙᴏᴛ ʀᴜɴɴɪɴɢ..!\n\nᴄʀᴇᴀᴛᴇᴅ ʙʏ \n ᴡʜᴏ-ᴀᴍ-ɪ")
+        self.LOGGER(__name__).info(f"""ʙᴏᴛ ᴅᴇᴘʟᴏʏᴇᴅ ʙʏ @ᴡʜᴏ-ᴀᴍ-ɪ""")
 
         self.set_parse_mode(ParseMode.HTML)
         self.username = usr_bot_me.username
-        self.LOGGER(__name__).info(f"Bot Running..! Made by @Codeflix_Bots")   
+        self.LOGGER(__name__).info(f"ʙᴏᴛ ʀᴜɴɴɪɴɢ..! ᴍᴀᴅᴇ ʙʏ @Aɴɪᴍᴇ Lᴏʀᴅ")   
 
         # Start Web Server
         app = web.AppRunner(await web_server())
@@ -64,17 +64,17 @@ class Bot(Client):
 
     async def stop(self, *args):
         await super().stop()
-        self.LOGGER(__name__).info("Bot stopped.")
+        self.LOGGER(__name__).info("ʙᴏᴛ ꜱᴛᴏᴘᴘᴇᴅ.")
 
     def run(self):
         """Run the bot."""
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.start())
-        self.LOGGER(__name__).info("Bot is now running. Thanks to @rohit_1888")
+        self.LOGGER(__name__).info("ʙᴏᴛ ɪꜱ ɴᴏᴡ ʀᴜɴɴɪɴɢ. ᴛʜᴀɴᴋꜱ ᴛᴏ @ᴡʜᴏ-ᴀᴍ-ɪ")
         try:
             loop.run_forever()
         except KeyboardInterrupt:
-            self.LOGGER(__name__).info("Shutting down...")
+            self.LOGGER(__name__).info("ꜱʜᴜᴛᴛɪɴɢ ᴅᴏᴡɴ...")
         finally:
             loop.run_until_complete(self.stop())
 
