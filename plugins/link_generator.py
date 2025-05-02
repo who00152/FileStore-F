@@ -147,7 +147,7 @@ async def custom_batch(client: Client, message: Message):
             try:
                 user_msg = await client.ask(
                     chat_id=user_id,
-                    text="ᴡᴀɪᴛɪɴɢ ꜰᴏʀ ꜰɪʟᴇꜱ/ᴍᴇꜱꜱᴀɢᴇꜱ...\nᴛʏᴘᴇ 'STOP' ᴛᴏ ꜰɪɴɪꜱʜ.",
+                    text="ᴡᴀɪᴛɪɴɢ ꜰᴏʀ ꜰɪʟᴇꜱ/ᴍᴇꜱꜱᴀɢᴇꜱ...\nᴛʏᴘᴇ *ᴄʟᴏsᴇ* ᴛᴏ ꜰɪɴɪꜱʜ.",
                     timeout=60,
                     reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]])
                 )
