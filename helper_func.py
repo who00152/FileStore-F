@@ -104,7 +104,7 @@ async def is_sub(client, user_id, channel_id):
         return False
 
     except Exception as e:
-        print(f"[!] Error in is_sub(): {e}")
+        print(f"[!] ᴇʀʀᴏʀ ɪɴ ɪꜱ_ꜱᴜʙ(): {e}")
         return False
 
 # Don't Remove Credit @CodeFlix_Bots, @rohit_1888
