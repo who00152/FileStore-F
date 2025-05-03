@@ -182,12 +182,11 @@ async def start_command(client: Client, message: Message):
                 ) if reload_url else None
 
                 await notification_msg.edit(
-                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʰ
                     "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
                     reply_markup=keyboard
                 )
             except Exception as e:
-                print(f"ᴇʀʀᴏʀ ᴜᴘᴅᴀᴛɪɴɢ ɴᴏᴛɪꜰɪᴄᴀᴛɪᴏɴ ᴡɪᴛʜ '🅶🅴🆃 ​ 🅵🅸🅻🅴 ​ 🅰🅶🅰🅸🅽' ʙᴜᴛᴛɴɴ: {e}")
+                print(f"ᴇʀʀᴏʀ ᴜᴘᴅᴀᴛɪɴɢ ɴᴏᴛɪꜰɪᴄᴀᴛɪᴏɴ ᴡɪᴛʜ '🅶🅴🆃 ​ 🅵🅸🅻🅴 ​ 🅰🅶🅰🅸🅽' ʙᴜᴛᴛɴ: {e}")
     else:
         reply_markup = InlineKeyboardMarkup(
             [
@@ -210,7 +209,7 @@ async def start_command(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=5104841245755180586)  # 🔥
+                        message_effect_id=5104841245755180586)  # 🔥
         )
         return
 
