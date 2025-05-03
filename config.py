@@ -24,26 +24,61 @@ FSUB_LINK_EXPIRY = int(os.getenv("FSUB_LINK_EXPIRY", "10"))  # 0 means no expiry
 BAN_SUPPORT = os.environ.get("BAN_SUPPORT", "https://t.me/CodeflixSupport")
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "200"))
 # --------------------------------------------
-# Image lists for random selection
 START_PICS = [
     "https://t.me/c/2364110879/370",
     "https://t.me/c/2364110879/345",
-    "https://t.me/c/2364110879/358"
+    "https://t.me/c/2364110879/358",
+    "https://t.me/c/2364110879/359",
+    "https://t.me/c/2364110879/360",
+    "https://t.me/c/2364110879/361",
+    "https://t.me/c/2364110879/362",
+    "https://t.me/c/2364110879/363",
+    "https://t.me/c/2364110879/366",
+    "https://t.me/c/2364110879/367",
+    "https://t.me/c/2364110879/368",
+    "https://t.me/c/2364110879/369"
 ]
 
 FORCE_PICS = [
+    "https://t.me/c/2364110879/370",
+    "https://t.me/c/2364110879/345",
+    "https://t.me/c/2364110879/358",
     "https://t.me/c/2364110879/359",
     "https://t.me/c/2364110879/360",
-    "https://t.me/c/2364110879/361"
+    "https://t.me/c/2364110879/361",
+    "https://t.me/c/2364110879/362",
+    "https://t.me/c/2364110879/363",
+    "https://t.me/c/2364110879/366",
+    "https://t.me/c/2364110879/367",
+    "https://t.me/c/2364110879/368",
+    "https://t.me/c/2364110879/369"
 ]
 
 HELP_PICS = [
+    "https://t.me/c/2364110879/370",
+    "https://t.me/c/2364110879/345",
+    "https://t.me/c/2364110879/358",
+    "https://t.me/c/2364110879/359",
+    "https://t.me/c/2364110879/360",
+    "https://t.me/c/2364110879/361",
     "https://t.me/c/2364110879/362",
     "https://t.me/c/2364110879/363",
-    "https://t.me/c/2364110879/366"
+    "https://t.me/c/2364110879/366",
+    "https://t.me/c/2364110879/367",
+    "https://t.me/c/2364110879/368",
+    "https://t.me/c/2364110879/369"
 ]
 
 ABOUT_PICS = [
+    "https://t.me/c/2364110879/370",
+    "https://t.me/c/2364110879/345",
+    "https://t.me/c/2364110879/358",
+    "https://t.me/c/2364110879/359",
+    "https://t.me/c/2364110879/360",
+    "https://t.me/c/2364110879/361",
+    "https://t.me/c/2364110879/362",
+    "https://t.me/c/2364110879/363",
+    "https://t.me/c/2364110879/366",
     "https://t.me/c/2364110879/367",
     "https://t.me/c/2364110879/368",
     "https://t.me/c/2364110879/369"
@@ -58,7 +93,7 @@ SHORTENER_PIC = os.environ.get("SHORTENER_PIC", "https://telegra.ph/file/ec17880
 # --------------------------------------------
 
 # --------------------------------------------
-HELP_TXT = "<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @MehediYT69\n\n❏ ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅs\n├/start : sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ\n├/about : ᴏᴜʀ Iɴғᴏʀᴍᴀᴛɪᴏɴ\n└/help : ʜᴇʟᴩ ʀᴇʟᴀᴛᴇᴅ ʙᴏᴛ\n\n sɪᴍᴘʟʏ ᴄʟɪᴄᴋ ᴏɴ ʟɪɴᴋ ᴀɴᴅ sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ ᴊᴏɪɴ ʙᴏᴛʜ ᴄʜᴀɴɴᴇʟs ᴀɴᴅ ᴛʀʏ ᴀɢᴀɪɴ ᴛʜᴀᴛs ɪᴛ.....!\n\n ᴅᴇᴠᴇʟᴏᴘᴇᴅ ʙʏ <a href=https://t.me/cosmic_freak>Aɴɪᴍᴇ Lᴏʀᴅ</a></blockquote></b>"
+HELP_TXT = "<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @MehediYT69\n\n❏ ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅs\n├/start : sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ\n├/about : ᴏᴜʀ Iɴғᴏʀᴍᴀᴛɪᴏɴ\n└/help : ʜᴇʟᴘ ʀᴇʟᴀᴛᴇᴅ ʙᴏᴛ\n\n sɪᴍᴘʟʏ ᴄʟɪᴄᴋ ᴏɴ ʟɪɴᴋ ᴀɴᴅ sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ ᴊᴏɪɴ ʙᴏᴛʜ ᴄʜᴀɴɴᴇʟs ᴀɴᴅ ᴛʀʏ ᴀɢᴀɪɴ ᴛʜᴀᴛs ɪᴛ.....!\n\n ᴅᴇᴠᴇʟᴏᴘᴇᴅ ʙʏ <a href=https://t.me/cosmic_freak>Aɴɪᴍᴇ Lᴏʀᴅ</a></blockquote></b>"
 ABOUT_TXT = "<b><blockquote>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/cosmic_freak>MehediYT</a>\n◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/otakuflix_network>WHO-AM-I</a>\n◈ ᴀɴɪᴍᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/anime_cruise_netflix>Aɴɪᴍᴇ Lᴏʀᴅ</a>\n◈ sᴇʀɪᴇs ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/webseries_flix>Aɴɪᴍᴇ Lᴏʀᴅ sᴇʀɪᴇs ғʟɪx</a>\n◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/pornhwa_flix>Aɴɪᴍᴇ Lᴏʀᴅ Pᴏʀɴʜᴡᴀs</a>\n◈ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/cosmic_freak>Aɴɪᴍᴇ Lᴏʀᴅ</a></blockquote></b>"
 # --------------------------------------------
 # --------------------------------------------
@@ -74,7 +109,7 @@ CMD_TXT = """<blockquote><b>» ᴀᴅᴍɪɴ ᴄᴏᴍᴍᴀɴᴅs:</b></blockqu
 <b>›› /unban :</b> ᴜɴʙᴀɴ ᴀ ᴜꜱᴇʀ
 <b>›› /banlist :</b> ɢᴇᴛ ʟɪsᴛ ᴏꜰ ʙᴀɴɴᴇᴅ ᴜꜱᴇʀs
 <b>›› /addchnl :</b> ᴀᴅᴅ ꜰᴏʀᴄᴇ sᴜʙ ᴄʜᴀɴɴᴇʟ
-<b>›› /delchnl :</b> ʀᴇᴍᴏ�<vᴇ ꜰᴏʀᴄᴇ sᴜʙ ᴄʜᴀɴɴᴇʟ
+<b>›› /delchnl :</b> ʀᴇᴍᴏᴠᴇ ꜰᴏʀᴄᴇ sᴜʙ ᴄʜᴀɴɴᴇʟ
 <b>›› /listchnl :</b> ᴠɪᴇᴡ ᴀᴅᴅᴇᴅ ᴄʜᴀɴɴᴇʟs
 <b>›› /fsub_mode :</b> ᴛᴏɢɢʟᴇ ꜰᴏʀᴄᴇ sᴜʙ ᴍᴏᴅᴇ
 <b>›› /pbroadcast :</b> sᴇɴᴅ ᴘʜᴏᴛᴏ ᴛᴏ ᴀʟʟ ᴜꜱᴇʀs
@@ -82,7 +117,7 @@ CMD_TXT = """<blockquote><b>» ᴀᴅᴍɪɴ ᴄᴏᴍᴍᴀɴᴅs:</b></blockqu
 <b>›› /deladmin :</b> ʀᴇᴍᴏᴠᴇ ᴀɴ ᴀᴅᴍɪɴ
 <b>›› /admins :</b> ɢᴇᴛ ʟɪsᴛ ᴏꜰ ᴀᴅᴍɪɴs
 <b>›› /addpremium :</b> ᴀᴅᴅ ᴀ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ
-<b>›› /premium_users :</b> ʟɪsᴛ ᴀʟʟ ᴘʀᴇᴮɪᴜᴍ ᴜꜱᴇʀs
+<b>›› /premium_users :</b> ʟɪsᴛ ᴀʟʟ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀs
 <b>›› /remove_premium :</b> ʀᴇᴍᴏᴠᴇ ᴘʀᴇᴍɪᴜᴍ ꜰʀᴏᴍ ᴀ ᴜꜱᴇʀ
 <b>›› /myplan :</b> ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴘʀᴇᴍɪᴜᴍ sᴛᴀᴛᴜs
 <b>›› /count :</b> ᴄᴏᴜɴᴛ verifications
@@ -116,7 +151,7 @@ PRICE4 = os.environ.get("PRICE4", "280 rs")
 # 1 Year
 PRICE5 = os.environ.get("PRICE5", "550 rs")
 
-# ====================(END)========================#
+# ===================(END)========================#
 
 LOG_FILE_NAME = "filesharingbot.txt"
 
