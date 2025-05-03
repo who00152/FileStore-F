@@ -8,20 +8,19 @@
 # Please see < https://github.com/Codeflix-Bots/FileStore/blob/master/LICENSE >
 #
 # All rights reserved.
-#
 
 import asyncio
 import os
 import random
 import sys
 import re
-import string 
+import string
 import string as rohit
 import time
 from datetime import datetime, timedelta
 from pyrogram import Client, filters, __version__
 from pyrogram.enums import ParseMode, ChatAction
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, ChatInviteLink, ChatPrivileges, InputMediaPhoto
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, ChatInviteLink, ChatPrivileges
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
 from bot import Bot
@@ -138,19 +137,19 @@ async def start_command(client: Client, message: Message):
 
         codeflix_msgs = []
         for msg in messages:
-            caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
+            caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html,
                                              filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and bool(msg.document)
                        else ("" if not msg.caption else msg.caption.html))
 
             reply_markup = msg.reply_markup if DISABLE_CHANNEL_BUTTON else None
 
             try:
-                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
+                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML,
                                             reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
                 codeflix_msgs.append(copied_msg)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
-                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
+                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML,
                                             reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
                 codeflix_msgs.append(copied_msg)
             except Exception as e:
@@ -164,10 +163,10 @@ async def start_command(client: Client, message: Message):
 
             await asyncio.sleep(FILE_AUTO_DELETE)
 
-            for snt_msg in codeflix_msgs:    
+            for snt_msg in codeflix_msgs:
                 if snt_msg:
-                    try:    
-                        await snt_msg.delete()  
+                    try:
+                        await snt_msg.delete()
                     except Exception as e:
                         print(f"ᴇʀʀᴏʀ ᴅᴇʟᴇᴛɪɴɢ ᴍᴇꜱꜱᴀɢᴇ {snt_msg.id}: {e}")
 
@@ -186,7 +185,7 @@ async def start_command(client: Client, message: Message):
                     reply_markup=keyboard
                 )
             except Exception as e:
-                print(f"ᴇʀʀᴏʀ ᴜᴘᴅᴀᴛɪɴɢ ɴᴏᴛɪꜰɪᴄᴀᴛɪᴏɴ ᴡɪᴛʜ '🅶🅴🆃 ​ 🅵🅸🅻🅴 ​ 🅰🅶🅰🅸🅽' ʙᴜᴛᴛɴ: {e}")
+                print(f"ᴇʀʀᴏʀ ᴜᴘᴅᴀᴛɪɴɢ ɴᴏᴛɪꜰɪᴄᴀᴛɪᴏɴ ᴡɪᴛʜ '🅶🅴🆃 ​ 🅵🅸🅻🅴 ​ 🅰🅶🅰🅸🅽' ʙᴜᴛᴛɴɴ: {e}")
     else:
         reply_markup = InlineKeyboardMarkup(
             [
@@ -226,7 +225,7 @@ async def not_joined(client: Client, message: Message):
     try:
         all_channels = await db.show_channels()  # Should return list of (chat_id, mode) tuples
         for total, chat_id in enumerate(all_channels, start=1):
-            mode = await db.get_channel_mode(chat_id)  # fetch mode 
+            mode = await db.get_channel_mode(chat_id)  # fetch mode
 
             await message.reply_chat_action(ChatAction.TYPING)
 
@@ -309,13 +308,14 @@ async def callback_query_handler(client: Client, callback_query: CallbackQuery):
         random_help_pic = random.choice(HELP_PICS)
         await callback_query.message.edit_media(
             media=InputMediaPhoto(random_help_pic),
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="start_back")]
-            ])
-        )
-        await callback_query.message.edit_caption(
-            caption=HELP_TXT,  # Use HELP_TXT directly
-            parse_mode=ParseMode.HTML,
+            caption=HELP_TXT.format(
+                first=callback_query.from_user.first_name,
+                last=callback_query.from_user.last_name,
+                username=None if not callback_query.from_user.username else '@' + callback_query.from_user.username,
+                mention=callback_query.from_user.mention,
+                id=callback_query.from_user.id,
+                BAN_SUPPORT=BAN_SUPPORT
+            ),
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="start_back")]
             ])
@@ -325,13 +325,13 @@ async def callback_query_handler(client: Client, callback_query: CallbackQuery):
         random_about_pic = random.choice(ABOUT_PICS)
         await callback_query.message.edit_media(
             media=InputMediaPhoto(random_about_pic),
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="start_back")]
-            ])
-        )
-        await callback_query.message.edit_caption(
-            caption=ABOUT_TXT,  # Use ABOUT_TXT directly
-            parse_mode=ParseMode.HTML,
+            caption=ABOUT_TXT.format(
+                first=callback_query.from_user.first_name,
+                last=callback_query.from_user.last_name,
+                username=None if not callback_query.from_user.username else '@' + callback_query.from_user.username,
+                mention=callback_query.from_user.mention,
+                id=callback_query.from_user.id
+            ),
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="start_back")]
             ])
@@ -343,23 +343,13 @@ async def start_back_handler(client: Client, callback_query: CallbackQuery):
     random_start_pic = random.choice(START_PICS)
     await callback_query.message.edit_media(
         media=InputMediaPhoto(random_start_pic),
-        reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/animelordlis")],
-            [
-                InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
-                InlineKeyboardButton('ʜᴇʟᴘ •', callback_data="help")
-            ]
-        ])
-    )
-    await callback_query.message.edit_caption(
         caption=START_MSG.format(
             first=callback_query.from_user.first_name,
             last=callback_query.from_user.last_name,
-            username=None if not callback_query.from_user.username else '@' + callback_query.from_user.username,
+            username=None if not callback_query.from_user.username else '@' + callback_query.from_user.last_name,
             mention=callback_query.from_user.mention,
             id=callback_query.from_user.id
         ),
-        parse_mode=ParseMode.HTML,
         reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/animelordlis")],
             [
@@ -444,7 +434,6 @@ async def pre_remove_user(client: Client, msg: Message):
 # Command to list active premium users
 @Bot.on_message(filters.command('premium_users') & filters.private & admin)
 async def list_premium_users_command(client, message):
-    from pytz import timezone
     # Define IST timezone
     ist = timezone("Asia/Kolkata")
 
@@ -509,6 +498,6 @@ async def total_verify_count_cmd(client, message: Message):
     await message.reply_text(f"Tᴏᴛᴀʟ ᴠᴇʀɪғɪᴇᴅ ᴛᴏᴋᴇɴs ᴛᴏᴅᴀʏ: <b>{total}</b>")
 
 @Bot.on_message(filters.command('commands') & filters.private & admin)
-async def bcmd(bot: Bot, message: Message):        
+async def bcmd(bot: Bot, message: Message):
     reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")]])
     await message.reply(text=CMD_TXT, reply_markup=reply_markup, quote=True)
