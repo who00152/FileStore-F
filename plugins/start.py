@@ -21,7 +21,7 @@ import time
 from datetime import datetime, timedelta
 from pyrogram import Client, filters, __version__
 from pyrogram.enums import ParseMode, ChatAction
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, ChatInviteLink, ChatPrivileges
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, ChatInviteLink, ChatPrivileges, InputMediaPhoto
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
 from bot import Bot
@@ -29,7 +29,6 @@ from config import *
 from helper_func import *
 from database.database import *
 from database.db_premium import *
-
 
 BAN_SUPPORT = f"{BAN_SUPPORT}"
 TUT_VID = f"{TUT_VID}"
@@ -51,14 +50,12 @@ async def short_url(client: Client, message: Message, base64_string):
 
         await message.reply_photo(
             photo=SHORTENER_PIC,
-            caption=SHORT_MSG.format(
-            ),
+            caption=SHORT_MSG.format(),
             reply_markup=InlineKeyboardMarkup(buttons),
         )
 
     except IndexError:
         pass
-
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def start_command(client: Client, message: Message):
@@ -185,6 +182,7 @@ async def start_command(client: Client, message: Message):
                 ) if reload_url else None
 
                 await notification_msg.edit(
+                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʰ
                     "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
                     reply_markup=keyboard
                 )
@@ -193,17 +191,17 @@ async def start_command(client: Client, message: Message):
     else:
         reply_markup = InlineKeyboardMarkup(
             [
-                    [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/animelordlis")],
-
-    [
-                    InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data = "about"),
-                    InlineKeyboardButton('ʜᴇʟᴘ •', callback_data = "help")
-
-    ]
+                [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/animelordlis")],
+                [
+                    InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
+                    InlineKeyboardButton('ʜᴇʟᴘ •', callback_data="help")
+                ]
             ]
         )
+        # Select a random image from START_PICS
+        random_start_pic = random.choice(START_PICS)
         await message.reply_photo(
-            photo=START_PIC,
+            photo=random_start_pic,
             caption=START_MSG.format(
                 first=message.from_user.first_name,
                 last=message.from_user.last_name,
@@ -213,16 +211,8 @@ async def start_command(client: Client, message: Message):
             ),
             reply_markup=reply_markup,
             message_effect_id=5104841245755180586)  # 🔥
-        
+        )
         return
-
-
-
-#=====================================================================================##
-# Don't Remove Credit @CodeFlix_Bots, @rohit_1888
-# Ask Doubt on telegram @CodeflixSupport
-
-
 
 # Create a global dictionary to store chat data
 chat_data_cache = {}
@@ -258,9 +248,8 @@ async def not_joined(client: Client, message: Message):
                             chat_id=chat_id,
                             creates_join_request=True,
                             expire_date=datetime.utcnow() + timedelta(seconds=FSUB_LINK_EXPIRY) if FSUB_LINK_EXPIRY else None
-                            )
+                        )
                         link = invite.invite_link
-
                     else:
                         if data.username:
                             link = f"https://t.me/{data.username}"
@@ -292,8 +281,10 @@ async def not_joined(client: Client, message: Message):
         except IndexError:
             pass
 
+        # Select a random image from FORCE_PICS
+        random_force_pic = random.choice(FORCE_PICS)
         await message.reply_photo(
-            photo=FORCE_PIC,
+            photo=random_force_pic,
             caption=FORCE_MSG.format(
                 first=message.from_user.first_name,
                 last=message.from_user.last_name,
@@ -311,7 +302,73 @@ async def not_joined(client: Client, message: Message):
             f"<blockquote expandable><b>Rᴇᴀsᴏɴ:</b> {e}</blockquote>"
         )
 
-#=====================================================================================##
+# Callback query handler for help and about
+@Bot.on_callback_query(filters.regex("^(help|about)$"))
+async def callback_query_handler(client: Client, callback_query: CallbackQuery):
+    if callback_query.data == "help":
+        # Select a random image from HELP_PICS
+        random_help_pic = random.choice(HELP_PICS)
+        await callback_query.message.edit_media(
+            media=InputMediaPhoto(random_help_pic),
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="start_back")]
+            ])
+        )
+        await callback_query.message.edit_caption(
+            caption=HELP_TXT,  # Use HELP_TXT directly
+            parse_mode=ParseMode.HTML,
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="start_back")]
+            ])
+        )
+    elif callback_query.data == "about":
+        # Select a random image from ABOUT_PICS
+        random_about_pic = random.choice(ABOUT_PICS)
+        await callback_query.message.edit_media(
+            media=InputMediaPhoto(random_about_pic),
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="start_back")]
+            ])
+        )
+        await callback_query.message.edit_caption(
+            caption=ABOUT_TXT,  # Use ABOUT_TXT directly
+            parse_mode=ParseMode.HTML,
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="start_back")]
+            ])
+        )
+
+# Callback query handler for back to start
+@Bot.on_callback_query(filters.regex("^start_back$"))
+async def start_back_handler(client: Client, callback_query: CallbackQuery):
+    random_start_pic = random.choice(START_PICS)
+    await callback_query.message.edit_media(
+        media=InputMediaPhoto(random_start_pic),
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/animelordlis")],
+            [
+                InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
+                InlineKeyboardButton('ʜᴇʟᴘ •', callback_data="help")
+            ]
+        ])
+    )
+    await callback_query.message.edit_caption(
+        caption=START_MSG.format(
+            first=callback_query.from_user.first_name,
+            last=callback_query.from_user.last_name,
+            username=None if not callback_query.from_user.username else '@' + callback_query.from_user.username,
+            mention=callback_query.from_user.mention,
+            id=callback_query.from_user.id
+        ),
+        parse_mode=ParseMode.HTML,
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/animelordlis")],
+            [
+                InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
+                InlineKeyboardButton('ʜᴇʟᴘ •', callback_data="help")
+            ]
+        ])
+    )
 
 @Bot.on_message(filters.command('myplan') & filters.private)
 async def check_plan(client: Client, message: Message):
@@ -323,7 +380,6 @@ async def check_plan(client: Client, message: Message):
     # Send the response message to the user
     await message.reply(status_message)
 
-#=====================================================================================##
 # Command to add premium user
 @Bot.on_message(filters.command('addpremium') & filters.private & admin)
 async def add_premium_user_command(client, msg):
@@ -373,7 +429,6 @@ async def add_premium_user_command(client, msg):
     except Exception as e:
         await msg.reply_text(f"⚠️ ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ: `{str(e)}`")
 
-
 # Command to remove premium user
 @Bot.on_message(filters.command('remove_premium') & filters.private & admin)
 async def pre_remove_user(client: Client, msg: Message):
@@ -387,10 +442,10 @@ async def pre_remove_user(client: Client, msg: Message):
     except ValueError:
         await msg.reply_text("ᴜꜱᴇʀ_ɪᴅ ᴍᴜꜱᴛ ʙᴇ ᴀɴ ɪɴᴛᴇɢᴇʀ ᴏʀ ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ ɪɴ ᴅᴀᴛᴀʙᴀꜱᴇ.")
 
-
 # Command to list active premium users
 @Bot.on_message(filters.command('premium_users') & filters.private & admin)
 async def list_premium_users_command(client, message):
+    from pytz import timezone
     # Define IST timezone
     ist = timezone("Asia/Kolkata")
 
@@ -420,7 +475,7 @@ async def list_premium_users_command(client, message):
             user_info = await client.get_users(user_id)
             username = user_info.username if user_info.username else "No Username"
             first_name = user_info.first_name
-            mention=user_info.mention
+            mention = user_info.mention
 
             # Calculate days, hours, minutes, seconds left
             days, hours, minutes, seconds = (
@@ -447,20 +502,14 @@ async def list_premium_users_command(client, message):
     if len(premium_user_list) == 1:  # No active users found
         await message.reply_text("ɪ ꜰᴏᴜɴᴅ 0 ᴀᴄᴛɪᴠᴇ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀꜱ ɪɴ ᴍʏ ᴅʙ")
     else:
-        await message.reply_text("\n\n".ᴊᴏɪɴ(premium_user_list), parse_mode=None)
-
-
-#=====================================================================================##
+        await message.reply_text("\n\n".join(premium_user_list), parse_mode=None)
 
 @Bot.on_message(filters.command("count") & filters.private & admin)
 async def total_verify_count_cmd(client, message: Message):
     total = await db.get_total_verify_count()
     await message.reply_text(f"Tᴏᴛᴀʟ ᴠᴇʀɪғɪᴇᴅ ᴛᴏᴋᴇɴs ᴛᴏᴅᴀʏ: <b>{total}</b>")
 
-
-#=====================================================================================##
-
 @Bot.on_message(filters.command('commands') & filters.private & admin)
 async def bcmd(bot: Bot, message: Message):        
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data = "close")]])
-    await message.reply(text=CMD_TXT, reply_markup = reply_markup, quote= True)
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")]])
+    await message.reply(text=CMD_TXT, reply_markup=reply_markup, quote=True)
