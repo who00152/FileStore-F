@@ -36,7 +36,7 @@ TUT_VID = f"{TUT_VID}"
 
 async def short_url(client: Client, message: Message, base64_string):
     try:
-        prem_link = f"https://t.me/{client.username}?start=yu3elk{base64_string}"
+        prem_link = f"https://t.me/{client.username}?start=yu3elk{base64_string}7"
         short_link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, prem_link)
 
         buttons = [
@@ -73,7 +73,7 @@ async def start_command(client: Client, message: Message):
             "<b>⛔️ ʏᴏᴜ ᴀʀᴇ ʙᴀɴɴᴇᴅ ꜰʀᴏᴍ ᴜꜱɪɴɢ ᴛʜɪꜱ ʙᴏᴛ.</b>\n\n"
             "<i>🅲🅾🅽🆃🅰🅲🆃 🆂🆄🅿🅿🅾🆁🆃 ɪꜰ ʏᴏᴜ ᴛʜɪɴᴋ ᴛʜɪꜱ ɪꜱ ᴀ ᴍɪꜱᴛᴀᴋᴇ.</i>",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("ᴄᴏɴᴛᴀᴄᴛ ꜱᴜᴘᴘᴏʀᴛ ", url=BAN_SUPPORT)]]
+                [[InlineKeyboardButton("ᴄᴏɴᴛᴀᴄᴛ ꜱᴜᴘᴘᴏʀᴛ", url=BAN_SUPPORT)]]
             )
         )
 
@@ -171,7 +171,7 @@ async def start_command(client: Client, message: Message):
                 if snt_msg:
                     try:    
                         await snt_msg.delete()  
-                    except  Exception as e:
+                    except Exception as e:
                         print(f"ᴇʀʀᴏʀ ᴅᴇʟᴇᴛɪɴɢ ᴍᴇꜱꜱᴀɢᴇ {snt_msg.id}: {e}")
 
             try:
@@ -189,11 +189,11 @@ async def start_command(client: Client, message: Message):
                     reply_markup=keyboard
                 )
             except Exception as e:
-                print(f"ᴇʀʀᴏʀ ᴜᴘᴅᴀᴛɪɴɢ ɴᴏᴛɪꜰɪᴄᴀᴛɪᴏɴ ᴡɪᴛʜ 'Get File Again' ʙᴜᴛᴛɴɴ: {e}")
+                print(f"ᴇʀʀᴏʀ ᴜᴘᴅᴀᴛɪɴɢ ɴᴏᴛɪꜰɪᴄᴀᴛɪᴏɴ ᴡɪᴛʜ '🅶🅴🆃 ​ 🅵🅸🅻🅴 ​ 🅰🅶🅰🅸🅽' ʙᴜᴛᴛɴɴ: {e}")
     else:
         reply_markup = InlineKeyboardMarkup(
             [
-                    [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/Nova_Flix/50")],
+                    [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/animelordlis")],
 
     [
                     InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data = "about"),
@@ -277,7 +277,7 @@ async def not_joined(client: Client, message: Message):
                 except Exception as e:
                     print(f"ᴇʀʀᴏʀ ᴡɪᴛʜ ᴄʜᴀᴛ {chat_id}: {e}")
                     return await temp.edit(
-                        f"<b><i>! Eʀʀᴏʀ, Cᴏɴᴛᴀᴄᴛ ᴅᴇᴠᴇʟᴏᴘᴇʀ ᴛᴏ sᴏʟᴠᴇ ᴛʜᴇ ɪssᴜᴇs @rohit_1888</i></b>\n"
+                        f"<b><i>! Eʀʀᴏʀ, Cᴏɴᴛᴀᴄᴛ ᴅᴇᴠᴇʟᴏᴘᴇʀ ᴛᴏ sᴏʟᴠᴇ ᴛʜᴇ ɪssᴜᴇs @MehediYT69</i></b>\n"
                         f"<blockquote expandable><b>Rᴇᴀsᴏɴ:</b> {e}</blockquote>"
                     )
 
@@ -339,7 +339,7 @@ async def add_premium_user_command(client, msg):
             "Examples:\n"
             "/addpremium 123456789 30 m → 30 ᴍɪɴᴜᴛᴇꜱ\n"
             "/addpremium 123456789 2 h → 2 ʜᴏᴜʀꜱ\n"
-            "/addpremium 123456789 1 d → 1 ᴅᴀʏꜱ\n"
+            "/addpremium 123456789 1 d → 1 ᴅᴀʏ\n"
             "/addpremium 123456789 1 y → 1 ʏᴇᴀʀ"
         )
         return
@@ -383,7 +383,7 @@ async def pre_remove_user(client: Client, msg: Message):
     try:
         user_id = int(msg.command[1])
         await remove_premium(user_id)
-        await msg.reply_text(f"User {user_id} has been removed.")
+        await msg.reply_text(f"USER {user_id} HAS BEEN REMOVED.")
     except ValueError:
         await msg.reply_text("ᴜꜱᴇʀ_ɪᴅ ᴍᴜꜱᴛ ʙᴇ ᴀɴ ɪɴᴛᴇɢᴇʀ ᴏʀ ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ ɪɴ ᴅᴀᴛᴀʙᴀꜱᴇ.")
 
