@@ -152,6 +152,7 @@ async def del_force_sub(client: Client, message: Message):
         return await temp.edit(
             "<b>ᴜꜱᴀɢᴇ:</b> <code>/delchnl <channel_id | all</code>",
             reply_markup=InlineKeyboardMarkup(buttons)
+        )
     except Exception as e:
         return await temp.edit(f"<b>❌ ᴇʀʀᴏʀ:</b> <code>{e}</code>")
 
@@ -173,6 +174,7 @@ async def list_force_sub_channels(client: Client, message: Message):
             result += f"<b>•</b> <code>{ch_id}</code> — <i>ᴜɴᴀᴠᴀɪʟᴀʙʟᴇ</i>\n"
 
     buttons = [[InlineKeyboardButton("ᴄʟᴏsᴇ ✖️", callback_data="close")]]
-    await temp.edit(result, 
-                   disable_web_page_preview=True, 
-                   reply_markup=InlineKeyboardMarkup(buttons))
+    await temp.edit(
+        result, 
+        disable_web_page_preview=True, 
+        reply_markup=InlineKeyboardMarkup(buttons)
