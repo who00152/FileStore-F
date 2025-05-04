@@ -1,65 +1,78 @@
-#
-# Copyright (C) 2025 by Codeflix-Bots@Github, < https://github.com/Codeflix-Bots >.
-#
-# This file is part of < https://github.com/Codeflix-Bots/FileStore > project,
-# and is released under the MIT License.
-# Please see < https://github.com/Codeflix-Bots/FileStore/blob/master/LICENSE >
-#
-# All rights reserved.
+# cbb.py
 
-from pyrogram import Client 
+from pyrogram import Client
 from bot import Bot
 from config import *
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
 from database.database import *
+import random
 
 @Bot.on_callback_query()
 async def cb_handler(client: Bot, query: CallbackQuery):
     data = query.data
 
     if data == "help":
-        await query.message.edit_text(
-            text=HELP_TXT.format(first=query.from_user.first_name),
-            disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton('ʜᴏᴍᴇ', callback_data='start'),
-                 InlineKeyboardButton("ᴄʟᴏꜱᴇ", callback_data='close')]
-            ])
-        )
+        help_images = await db.get_images("help")
+        if help_images:
+            photo = random.choice(help_images)
+            await query.message.edit_media(
+                media=InputMediaPhoto(media=photo, caption=HELP_TXT.format(first=query.from_user.first_name)),
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton('ʜᴏᴍᴇ', callback_data='start'),
+                     InlineKeyboardButton("ᴄʟᴏꜱᴇ", callback_data='close')]
+                ])
+            )
+        else:
+            await query.message.edit_text(
+                text=HELP_TXT.format(first=query.from_user.first_name),
+                disable_web_page_preview=True,
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton('ʜᴏᴍᴇ', callback_data='start'),
+                     InlineKeyboardButton("ᴄʟᴏꜱᴇ", callback_data='close')]
+                ])
+            )
 
     elif data == "about":
-        await query.message.edit_text(
-            text=ABOUT_TXT.format(first=query.from_user.first_name),
-            disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton('ʜᴏᴍᴇ', callback_data='start'),
-                 InlineKeyboardButton('ᴄʟᴏꜱᴇ', callback_data='close')]
-            ])
-        )
+        about_images = await db.get_images("about")
+        if about_images:
+            photo = random.choice(about_images)
+            await query.message.edit_media(
+                media=InputMediaPhoto(media=photo, caption=ABOUT_TXT.format(first=query.from_user.first_name)),
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton('ʜᴏᴍᴇ', callback_data='start'),
+                     InlineKeyboardButton("ᴄʟᴏꜱᴇ", callback_data='close')]
+                ])
+            )
+        else:
+            await query.message.edit_text(
+                text=ABOUT_TXT.format(first=query.from_user.first_name),
+                disable_web_page_preview=True,
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton('ʜᴏᴍᴇ', callback_data='start'),
+                     InlineKeyboardButton("ᴄʟᴏꜱᴇ", callback_data='close')]
+                ])
+            )
 
     elif data == "start":
-        await query.message.edit_text(
-            text=START_MSG.format(first=query.from_user.first_name),
-            disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("ʜᴇʟᴘ", callback_data='help'),
-                 InlineKeyboardButton("ᴀʙᴏᴜᴛ", callback_data='about')]
-            ])
-        )
-
-
-# Don't Remove Credit @CodeFlix_Bots, @rohit_1888
-# Ask Doubt on telegram @CodeflixSupport
-#
-# Copyright (C) 2025 by Codeflix-Bots@Github, < https://github.com/Codeflix-Bots >.
-#
-# This file is part of < https://github.com/Codeflix-Bots/FileStore > project,
-# and is released under the MIT License.
-# Please see < https://github.com/Codeflix-Bots/FileStore/blob/master/LICENSE >
-#
-# All rights reserved.
-#
-
+        start_images = await db.get_images("start")
+        if start_images:
+            photo = random.choice(start_images)
+            await query.message.edit_media(
+                media=InputMediaPhoto(media=photo, caption=START_MSG.format(first=query.from_user.first_name)),
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton("ʜᴇʟᴘ", callback_data='help'),
+                     InlineKeyboardButton("ᴀʙᴏᴜᴛ", callback_data='about')]
+                ])
+            )
+        else:
+            await query.message.edit_text(
+                text=START_MSG.format(first=query.from_user.first_name),
+                disable_web_page_preview=True,
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton("ʜᴇʟᴘ", callback_data='help'),
+                     InlineKeyboardButton("ᴀʙᴏᴜᴛ", callback_data='about')]
+                ])
+            )
 
     elif data == "premium":
         await query.message.delete()
@@ -89,8 +102,6 @@ async def cb_handler(client: Bot, query: CallbackQuery):
                 ]
             )
         )
-
-
 
     elif data == "close":
         await query.message.delete()
@@ -125,7 +136,6 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         await db.set_channel_mode(cid, mode)
         await query.answer(f"ꜰᴏʀᴄᴇ-ꜱᴜʙ ꜱᴇᴛ ᴛᴏ {'ON' if mode == 'on' else 'OFF'}")
 
-        # Refresh the same channel's mode view
         chat = await client.get_chat(cid)
         status = "🟢 ON" if mode == "on" else "🔴 OFF"
         new_mode = "off" if mode == "on" else "on"
@@ -155,15 +165,19 @@ async def cb_handler(client: Bot, query: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(buttons)
         )
 
+    elif data.startswith("set_"):
+        type = data.split("_")[1]
+        await db.set_temp_state(query.message.chat.id, f"set_{type}")
+        await query.message.reply_text(f"Please send me the {type} image.")
+        await query.answer()
 
-# Don't Remove Credit @CodeFlix_Bots, @rohit_1888
-# Ask Doubt on telegram @CodeflixSupport
-#
-# Copyright (C) 2025 by Codeflix-Bots@Github, < https://github.com/Codeflix-Bots >.
-#
-# This file is part of < https://github.com/Codeflix-Bots/FileStore > project,
-# and is released under the MIT License.
-# Please see < https://github.com/Codeflix-Bots/FileStore/blob/master/LICENSE >
-#
-# All rights reserved.
-#
+    elif data.startswith("remove_"):
+        type = data.split("_")[1]
+        images = await db.get_images(type)
+        if not images:
+            await query.message.reply_text(f"There are no {type} images set.")
+        else:
+            nums = list(range(1, len(images) + 1))
+            text = f"Current {type} images: {', '.join(map(str, nums))}\nTo remove a single image, use /rev_{type} <number>\nTo remove all, use /rev_all_{type}"
+            await query.message.reply_text(text)
+        await query.answer()
