@@ -76,7 +76,7 @@ class Bot(Client):
         finally:
             loop.run_until_complete(self.stop())
 
-@Bot.on_message(filters.photo & filters.private & admin)
+@Bot.on_message(filters.photo & filters.private & filters.user(admin))
 async def handle_admin_photo(client: Client, message: Message):
     chat_id = message.chat.id
     state = await db.get_temp_state(chat_id)
@@ -87,11 +87,11 @@ async def handle_admin_photo(client: Client, message: Message):
             file_id = message.photo.file_id
             await db.add_image(image_type, file_id)
             await message.reply_text(
-                f"New {image_type} image set successfully! Total {image_type} images: {len(await db.get_images(image_type))}",
+                f"New {image_type} image has been successfully set! Total {image_type} images: {len(await db.get_images(image_type))}",
                 reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Close", callback_data="close")]])
             )
             await db.clear_temp_state(chat_id)
         else:
-            await message.reply_text("No image setting command is active. Use /set_pic to start.")
+            await message.reply_text("No image setting command is active. Please use /set_pic to start.")
     except Exception as e:
-        await message.reply_text(f"Error processing image: {str(e)}")
+        await message.reply_text(f"Error processing the image: {str(e)}")
