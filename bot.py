@@ -1,95 +1,75 @@
+import os
+import sys
+import asyncio
+import logging
+from pyrogram import Client, filters
+from pyrogram.handlers import MessageHandler
+from config import API_HASH, APP_ID, LOGGER, OWNER_ID, TG_BOT_TOKEN, TG_BOT_WORKERS, FORCE_SUB_CHANNEL, CHANNEL_ID, PORT, DB_URI, DB_NAME, COLLECTION_NAME
 from aiohttp import web
 from plugins import web_server
-import asyncio
-import pyromod.listen
-from pyrogram import Client, filters
-from pyrogram.enums import ParseMode
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-import sys
-from datetime import datetime
-from config import *
-from database.database import *
+from database.database import Database
 
-name ="""
- **BY Aɴɪᴍᴇ Lᴏʀᴅ**
-"""
+db = Database(DB_URI, DB_NAME, COLLECTION_NAME)
+
+__version__ = "1.0.0"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logging.getLogger("pyrogram").setLevel(logging.WARNING)
+logging.getLogger("pyrogram.client").setLevel(logging.WARNING)
+logging.getLogger("pyrogram.session.auth").setLevel(logging.CRITICAL)
+logging.getLogger("pyrogram.session.session").setLevel(logging.CRITICAL)
 
 class Bot(Client):
     def __init__(self):
         super().__init__(
-            name="Bot",
+            "Bot",
             api_hash=API_HASH,
             api_id=APP_ID,
-            plugins={
-                "root": "plugins"
-            },
+            bot_token=TG_BOT_TOKEN,
             workers=TG_BOT_WORKERS,
-            bot_token=TG_BOT_TOKEN
+            plugins={"root": "plugins"},
         )
         self.LOGGER = LOGGER
+        self.uptime = None
 
     async def start(self):
         await super().start()
-        usr_bot_me = await self.get_me()
-        self.uptime = datetime.now()
-
-        try:
-            db_channel = await self.get_chat(CHANNEL_ID)
-            self.db_channel = db_channel
-            test = await self.send_message(chat_id=db_channel.id, text="Test Message")
-            await test.delete()
-        except Exception as e:
-            self.LOGGER(__name__).warning(e)
-            self.LOGGER(__name__).warning(f"ᴍᴀᴋᴇ ꜱᴜʀᴇ ʙᴏᴛ ɪꜱ ᴀᴅᴍɪɴ ɪɴ ᴅʙ ᴄʜᴀɴɴᴇʟ, ᴀɴᴅ ᴅᴏᴜʙʟᴇ ᴄʜᴇᴄᴋ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ_ɪᴅ ᴠᴀʟᴜᴇ, ᴄᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ {CHANNEL_ID}")
-            self.LOGGER(__name__).info("\nʙᴏᴛ ꜱᴛᴏᴘᴘᴇᴅ. ᴊᴏɪɴ https://t.me/+3lpawaYvxBU4YTY1 ꜰᴏʀ ꜱᴜᴘᴘᴏʀᴛ")
-            sys.exit()
-
-        self.set_parse_mode(ParseMode.HTML)
-        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..!\n\nᴄʀᴇᴀᴛᴇᴅ ʙʏ \n ᴡʜᴏ-ᴀᴍ-ɪ")
-        self.LOGGER(__name__).info(f"""ʙᴏᴛ ᴅᴇᴘʟᴏʏᴇᴅ ʙʏ @ᴡʜᴏ-ᴀᴍ-ɪ""")
-
-        self.set_parse_mode(ParseMode.HTML)
-        self.username = usr_bot_me.username
-        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..! ᴍᴀᴅᴇ ʙʏ @Aɴɪᴍᴇ Lᴏʀᴅ")   
-
-        app = web.AppRunner(await web_server())
-        await app.setup()
-        await web.TCPSite(app, "0.0.0.0", PORT).start()
-
-        try:
-            await self.send_message(OWNER_ID, text=f"<b><blockquote> Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ by @Anime_Lord_Bot</blockquote></b>")
-        except:
-            pass
+        self.uptime = asyncio.get_event_loop().time()
+        await self.LOGGER(__name__).info("ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..!")
+        await self.LOGGER(__name__).info(f"ʙᴏᴛ ᴅᴇᴘʟᴏʏᴇᴅ ʙʏ @ᴡʜᴏ-ᴀᴍ-ɪ")
+        await self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..! ᴍᴀᴅᴇ ʙʏ @Aɴɪᴍᴇ Lᴏʀᴅ")
+        await self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ɴᴏᴡ ᴀʟɪᴠᴇ. ᴛʜᴀɴᴋꜱ ᴛᴏ @ᴡʜᴏ-ᴀᴍ-ɪ")
 
     async def stop(self, *args):
         await super().stop()
-        self.LOGGER(__name__).info("ʙᴏᴛ ꜱᴛᴏᴘᴘᴇᴅ.")
+        self.LOGGER(__name__).info("Bot stopped.")
 
-    def run(self):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.start())
-        self.LOGGER(__name__).info("ʙᴏᴛ ɪꜱ ɴᴏᴡ ᴀʟɪᴠᴇ. ᴛʜᴀɴᴋꜱ ᴛᴏ @ᴡʜᴏ-ᴀᴍ-ɪ")
-        try:
-            loop.run_forever()
-        except KeyboardInterrupt:
-            self.LOGGER(__name__).info("ꜰᴜᴄᴋɪɴ ᴅᴏᴡɴ...")
-        finally:
-            loop.run_until_complete(self.stop())
+async def check_admin(client, message):
+    user_id = message.from_user.id
+    if user_id == OWNER_ID:
+        return True
+    return await db.admin_exist(user_id)
 
-# Handle admin photo uploads for setting images
-@Bot.on_message(filters.photo & filters.private & admin)
-async def handle_admin_photo(client: Client, message: Message):
-    chat_id = message.chat.id
-    state = await db.get_temp_state(chat_id)
-    if state in ["set_start", "set_help", "set_about"]:
-        type_map = {"set_start": "start", "set_help": "help", "set_about": "about"}
-        type = type_map[state]
-        file_id = message.photo.file_id
-        await db.add_image(type, file_id)
-        await message.reply_text(
-            f"New {type} image was set! Now current number of {type} images: {len(await db.get_images(type))}",
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]])
-        )
-        await db.clear_temp_state(chat_id)
-    else:
-        await message.reply_text("I'm not waiting for any image.")
+admin = filters.create(check_admin)
+
+app = Bot()
+
+async def main():
+    await app.start()
+    port = int(os.environ.get("PORT", PORT))
+    try:
+        server = web.AppRunner(await web_server())
+        await server.setup()
+        await web.TCPSite(server, "0.0.0.0", port).start()
+        await asyncio.Event().wait()
+    finally:
+        await app.stop()
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except (KeyboardInterrupt, SystemExit):
+        LOGGER(__name__).info("Bot stopped!")
