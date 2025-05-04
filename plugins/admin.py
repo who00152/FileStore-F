@@ -1,3 +1,5 @@
+# admin.py
+
 import asyncio
 import os
 import random
@@ -11,8 +13,6 @@ from bot import Bot
 from config import *
 from helper_func import *
 from database.database import *
-
-
 
 # Commands for adding admins by owner
 @Bot.on_message(filters.command('add_admin') & filters.private & filters.user(OWNER_ID))
@@ -64,7 +64,6 @@ async def add_admins(client: Client, message: Message):
             reply_markup=reply_markup
         )
 
-
 @Bot.on_message(filters.command('deladmin') & filters.private & filters.user(OWNER_ID))
 async def delete_admins(client: Client, message: Message):
     pro = await message.reply("<b><i>ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ..</i></b>", quote=True)
@@ -110,7 +109,6 @@ async def delete_admins(client: Client, message: Message):
     else:
         await pro.edit("<b><blockquote>ɴᴏ ᴀᴅᴍɪɴ ɪᴅꜱ ᴀᴠᴀɪʟᴀʙʟᴇ ᴛᴏ ᴅᴇʟᴇᴛᴇ.</blockquote></b>", reply_markup=reply_markup)
 
-
 @Bot.on_message(filters.command('admins') & filters.private & admin)
 async def get_admins(client: Client, message: Message):
     pro = await message.reply("<b><i>ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ..</i></b>", quote=True)
@@ -123,3 +121,92 @@ async def get_admins(client: Client, message: Message):
 
     reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]])
     await pro.edit(f"<b>⚡ ᴄᴜʀʀᴇɴᴛ ᴀᴅᴍɪɴ ʟɪꜱᴛ:</b>\n\n{admin_list}", reply_markup=reply_markup)
+
+# New command for managing images
+@Bot.on_message(filters.command("pic") & filters.private & admin)
+async def pic_command(client: Client, message: Message):
+    await message.reply_text(
+        "If you want to set/remove any images for start, help, or about messages, reply with:\n\n"
+        "/set_pic - to set images\n"
+        "/rev_pic - to remove images",
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]])
+    )
+
+@Bot.on_message(filters.command("set_pic") & filters.private & admin)
+async def set_pic(client: Client, message: Message):
+    keyboard = InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton("Set Start Img", callback_data="set_start")],
+            [InlineKeyboardButton("Set Help Img", callback_data="set_help")],
+            [InlineKeyboardButton("Set About Img", callback_data="set_about")],
+        ]
+    )
+    await message.reply_text("Please select which image to set:", reply_markup=keyboard)
+
+@Bot.on_message(filters.command("rev_pic") & filters.private & admin)
+async def rev_pic(client: Client, message: Message):
+    keyboard = InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton("Remove Start Img", callback_data="remove_start")],
+            [InlineKeyboardButton("Remove Help Img", callback_data="remove_help")],
+            [InlineKeyboardButton("Remove About Img", callback_data="remove_about")],
+        ]
+    )
+    await message.reply_text("Please select which images to remove from:", reply_markup=keyboard)
+
+@Bot.on_message(filters.command("rev_start") & filters.private & admin)
+async def rev_start(client: Client, message: Message):
+    if len(message.command) < 2:
+        await message.reply_text("Please provide the image number to remove.")
+        return
+    try:
+        index = int(message.command[1]) - 1
+        await db.remove_image("start", index)
+        await message.reply_text(f"Image removed! Now current number of start images: {len(await db.get_images('start'))}")
+    except ValueError:
+        await message.reply_text("Invalid number.")
+    except IndexError:
+        await message.reply_text("Image number out of range.")
+
+@Bot.on_message(filters.command("rev_all_start") & filters.private & admin)
+async def rev_all_start(client: Client, message: Message):
+    await db.clear_images("start")
+    await message.reply_text("All start images removed.")
+
+@Bot.on_message(filters.command("rev_help") & filters.private & admin)
+async def rev_help(client: Client, message: Message):
+    if len(message.command) < 2:
+        await message.reply_text("Please provide the image number to remove.")
+        return
+    try:
+        index = int(message.command[1]) - 1
+        await db.remove_image("help", index)
+        await message.reply_text(f"Image removed! Now current number of help images: {len(await db.get_images('help'))}")
+    except ValueError:
+        await message.reply_text("Invalid number.")
+    except IndexError:
+        await message.reply_text("Image number out of range.")
+
+@Bot.on_message(filters.command("rev_all_help") & filters.private & admin)
+async def rev_all_help(client: Client, message: Message):
+    await db.clear_images("help")
+    await message.reply_text("All help images removed.")
+
+@Bot.on_message(filters.command("rev_about") & filters.private & admin)
+async def rev_about(client: Client, message: Message):
+    if len(message.command) < 2:
+        await message.reply_text("Please provide the image number to remove.")
+        return
+    try:
+        index = int(message.command[1]) - 1
+        await db.remove_image("about", index)
+        await message.reply_text(f"Image removed! Now current number of about images: {len(await db.get_images('about'))}")
+    except ValueError:
+        await message.reply_text("Invalid number.")
+    except IndexError:
+        await message.reply_text("Image number out of range.")
+
+@Bot.on_message(filters.command("rev_all_about") & filters.private & admin)
+async def rev_all_about(client: Client, message: Message):
+    await db.clear_images("about")
+    await message.reply_text("All about images removed.")
