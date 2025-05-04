@@ -8,13 +8,14 @@
 # Please see < https://github.com/Codeflix-Bots/FileStore/blob/master/LICENSE >
 #
 # All rights reserved.
+#
 
 import asyncio
 import os
 import random
 import sys
 import re
-import string
+import string 
 import string as rohit
 import time
 from datetime import datetime, timedelta
@@ -29,12 +30,17 @@ from helper_func import *
 from database.database import *
 from database.db_premium import *
 
+# Define emoji reactions and sticker
+EMOJI_MODE = True  # Enable emoji reactions
+REACTIONS = ["👍", "😍", "🔥", "🎉", "❤️"]  # List of emojis for reaction
+STICKER_ID = "CAACAgUAAxkBAAJFeWd037UWP-vgb_dWo55DCPZS9zJzAAJpEgACqXaJVxBrhzahNnwSHgQ"  # Sticker ID from second bot
+
 BAN_SUPPORT = f"{BAN_SUPPORT}"
 TUT_VID = f"{TUT_VID}"
 
 async def short_url(client: Client, message: Message, base64_string):
     try:
-        prem_link = f"https://t.me/{client.username}?start=yu3elk{base64_string}7"
+        prem_link = f"https://t.me/{client.username}?start=yu3elk{base64_string}"
         short_link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, prem_link)
 
         buttons = [
@@ -49,18 +55,24 @@ async def short_url(client: Client, message: Message, base64_string):
 
         await message.reply_photo(
             photo=SHORTENER_PIC,
-            caption=SHORT_MSG.format(),
+            caption=SHORT_MSG.format(
+            ),
             reply_markup=InlineKeyboardMarkup(buttons),
         )
 
     except IndexError:
         pass
 
+
 @Bot.on_message(filters.command('start') & filters.private)
 async def start_command(client: Client, message: Message):
     user_id = message.from_user.id
     id = message.from_user.id
     is_premium = await is_premium_user(id)
+
+    # Add emoji reaction if EMOJI_MODE is enabled
+    if EMOJI_MODE:
+        await message.react(emoji=random.choice(REACTIONS), big=True)
 
     # Check if user is banned
     banned_users = await db.get_ban_users()
@@ -69,7 +81,7 @@ async def start_command(client: Client, message: Message):
             "<b>⛔️ ʏᴏᴜ ᴀʀᴇ ʙᴀɴɴᴇᴅ ꜰʀᴏᴍ ᴜꜱɪɴɢ ᴛʜɪꜱ ʙᴏᴛ.</b>\n\n"
             "<i>🅲🅾🅽🆃🅰🅲🆃 🆂🆄🅿🅿🅾🆁🆃 ɪꜰ ʏᴏᴜ ᴛʜɪɴᴋ ᴛʜɪꜱ ɪꜱ ᴀ ᴍɪꜱᴛᴀᴋᴇ.</i>",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("ᴄᴏɴᴛᴀᴄᴛ ꜱᴜᴘᴘᴏʀᴛ", url=BAN_SUPPORT)]]
+                [[InlineKeyboardButton("ᴄᴏɴᴛᴀᴄᴛ ꜱᴜᴘᴘᴏʀᴛ ", url=BAN_SUPPORT)]]
             )
         )
 
@@ -137,23 +149,29 @@ async def start_command(client: Client, message: Message):
 
         codeflix_msgs = []
         for msg in messages:
-            caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html,
+            caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
                                              filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and bool(msg.document)
                        else ("" if not msg.caption else msg.caption.html))
 
             reply_markup = msg.reply_markup if DISABLE_CHANNEL_BUTTON else None
 
             try:
-                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML,
+                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
                                             reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
                 codeflix_msgs.append(copied_msg)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
-                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML,
+                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
                                             reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
                 codeflix_msgs.append(copied_msg)
             except Exception as e:
-                print(f"ꜰᴀɪʟᴇᴅ ᴛᴏ ꜱᴇɴᴅ ᴍᴇꜱꜱᴀɢᴇ: {e}")
+                print(f"ꜰᴀɪʟᴇᴅ ᴛᴏ ꜱᴇɴᴅ ᴍᴇꜱ DIYala (pronounced dee-ya-la) is a free and open-source content management system based on PHP and MySQL.
+When you add a file named diyala.zip to your project, it will be unzipped and the contents will be added to your project.
+If you add a file named diyala.sql to your project, it will be executed against the database.
+Read more about Diyala at https://www.diyala.org/
+The code is available at https://github.com/diyala/diyala
+Diyala is licensed under the GNU General Public License v3.0.
+You can find the license at https://www.gnu.org/licenses/gpl-3.0.html
                 pass
 
         if FILE_AUTO_DELETE > 0:
@@ -163,11 +181,11 @@ async def start_command(client: Client, message: Message):
 
             await asyncio.sleep(FILE_AUTO_DELETE)
 
-            for snt_msg in codeflix_msgs:
+            for snt_msg in codeflix_msgs:    
                 if snt_msg:
-                    try:
-                        await snt_msg.delete()
-                    except Exception as e:
+                    try:    
+                        await snt_msg.delete()  
+                    except  Exception as e:
                         print(f"ᴇʀʀᴏʀ ᴅᴇʟᴇᴛɪɴɢ ᴍᴇꜱꜱᴀɢᴇ {snt_msg.id}: {e}")
 
             try:
@@ -185,21 +203,33 @@ async def start_command(client: Client, message: Message):
                     reply_markup=keyboard
                 )
             except Exception as e:
-                print(f"ᴇʀʀᴏʀ ᴜᴘᴅᴀᴛɪɴɢ ɴᴏᴛɪꜰɪᴄᴀᴛɪᴏɴ ᴡɪᴛʜ '🅶🅴🆃 ​ 🅵🅸🅻🅴 ​ 🅰🅶🅰🅸🅽' ʙᴜᴛᴛɴɴ: {e}")
+                print(f"ᴇʀʀᴏʀ ᴜᴘᴅᴀᴛɪɴɢ ɴᴏᴛɪꜰɪᴄᴀᴛɪᴏɴ ᴡɪᴛʜ 'Get File Again' ʙᴜᴛᴛɴɴ: {e}")
     else:
+        # Loading animation and sticker sequence
+        m = await message.reply_text("<i>ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴍʏ ʙᴏᴛ.\nʜᴏᴘᴇ ʏᴏᴜ'ʀᴇ ᴅᴏɪɴɢ ᴡᴇʟʟ...</i>")
+        await asyncio.sleep(0.4)
+        await m.edit_text("⏳")
+        await asyncio.sleep(0.5)
+        await m.edit_text("👀")
+        await asyncio.sleep(0.5)
+        await m.edit_text("<b><i>ꜱᴛᴀʀᴛɪɴɢ...</i></b>")
+        await asyncio.sleep(0.4)
+        await m.delete()
+        m = await message.reply_sticker(STICKER_ID)
+        await asyncio.sleep(1)
+        await m.delete()
+
         reply_markup = InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/animelordlis")],
+                [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/Nova_Flix/50")],
                 [
                     InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
                     InlineKeyboardButton('ʜᴇʟᴘ •', callback_data="help")
                 ]
             ]
         )
-        # Select a random image from START_PICS
-        random_start_pic = random.choice(START_PICS)
         await message.reply_photo(
-            photo=random_start_pic,
+            photo=START_PIC,
             caption=START_MSG.format(
                 first=message.from_user.first_name,
                 last=message.from_user.last_name,
@@ -208,9 +238,15 @@ async def start_command(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=5104841245755180586  # 🔥
+            message_effect_id=5104841245755180586
         )
         return
+
+
+#=====================================================================================##
+# Don't Remove Credit @CodeFlix_Bots, @rohit_1888
+# Ask Doubt on telegram @CodeflixSupport
+
 
 # Create a global dictionary to store chat data
 chat_data_cache = {}
@@ -225,7 +261,7 @@ async def not_joined(client: Client, message: Message):
     try:
         all_channels = await db.show_channels()  # Should return list of (chat_id, mode) tuples
         for total, chat_id in enumerate(all_channels, start=1):
-            mode = await db.get_channel_mode(chat_id)  # fetch mode
+            mode = await db.get_channel_mode(chat_id)  # fetch mode 
 
             await message.reply_chat_action(ChatAction.TYPING)
 
@@ -246,8 +282,9 @@ async def not_joined(client: Client, message: Message):
                             chat_id=chat_id,
                             creates_join_request=True,
                             expire_date=datetime.utcnow() + timedelta(seconds=FSUB_LINK_EXPIRY) if FSUB_LINK_EXPIRY else None
-                        )
+                            )
                         link = invite.invite_link
+
                     else:
                         if data.username:
                             link = f"https://t.me/{data.username}"
@@ -264,7 +301,7 @@ async def not_joined(client: Client, message: Message):
                 except Exception as e:
                     print(f"ᴇʀʀᴏʀ ᴡɪᴛʜ ᴄʜᴀᴛ {chat_id}: {e}")
                     return await temp.edit(
-                        f"<b><i>! Eʀʀᴏʀ, Cᴏɴᴛᴀᴄᴛ ᴅᴇᴠᴇʟᴏᴘᴇʀ ᴛᴏ sᴏʟᴠᴇ ᴛʜᴇ ɪssᴜᴇs @MehediYT69</i></b>\n"
+                        f"<b><i>! Eʀʀᴏʀ, Cᴏɴᴛᴀᴄᴛ ᴅᴇᴠᴇʟᴏᴘᴇʀ ᴛᴏ sᴏʟᴠᴇ ᴛʜᴇ ɪssᴜᴇs @rohit_1888</i></b>\n"
                         f"<blockquote expandable><b>Rᴇᴀsᴏɴ:</b> {e}</blockquote>"
                     )
 
@@ -279,10 +316,8 @@ async def not_joined(client: Client, message: Message):
         except IndexError:
             pass
 
-        # Select a random image from FORCE_PICS
-        random_force_pic = random.choice(FORCE_PICS)
         await message.reply_photo(
-            photo=random_force_pic,
+            photo=FORCE_PIC,
             caption=FORCE_MSG.format(
                 first=message.from_user.first_name,
                 last=message.from_user.last_name,
@@ -300,64 +335,7 @@ async def not_joined(client: Client, message: Message):
             f"<blockquote expandable><b>Rᴇᴀsᴏɴ:</b> {e}</blockquote>"
         )
 
-# Callback query handler for help and about
-@Bot.on_callback_query(filters.regex("^(help|about)$"))
-async def callback_query_handler(client: Client, callback_query: CallbackQuery):
-    if callback_query.data == "help":
-        # Select a random image from HELP_PICS
-        random_help_pic = random.choice(HELP_PICS)
-        await callback_query.message.edit_media(
-            media=InputMediaPhoto(random_help_pic),
-            caption=HELP_TXT.format(
-                first=callback_query.from_user.first_name,
-                last=callback_query.from_user.last_name,
-                username=None if not callback_query.from_user.username else '@' + callback_query.from_user.username,
-                mention=callback_query.from_user.mention,
-                id=callback_query.from_user.id,
-                BAN_SUPPORT=BAN_SUPPORT
-            ),
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="start_back")]
-            ])
-        )
-    elif callback_query.data == "about":
-        # Select a random image from ABOUT_PICS
-        random_about_pic = random.choice(ABOUT_PICS)
-        await callback_query.message.edit_media(
-            media=InputMediaPhoto(random_about_pic),
-            caption=ABOUT_TXT.format(
-                first=callback_query.from_user.first_name,
-                last=callback_query.from_user.last_name,
-                username=None if not callback_query.from_user.username else '@' + callback_query.from_user.username,
-                mention=callback_query.from_user.mention,
-                id=callback_query.from_user.id
-            ),
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="start_back")]
-            ])
-        )
-
-# Callback query handler for back to start
-@Bot.on_callback_query(filters.regex("^start_back$"))
-async def start_back_handler(client: Client, callback_query: CallbackQuery):
-    random_start_pic = random.choice(START_PICS)
-    await callback_query.message.edit_media(
-        media=InputMediaPhoto(random_start_pic),
-        caption=START_MSG.format(
-            first=callback_query.from_user.first_name,
-            last=callback_query.from_user.last_name,
-            username=None if not callback_query.from_user.username else '@' + callback_query.from_user.last_name,
-            mention=callback_query.from_user.mention,
-            id=callback_query.from_user.id
-        ),
-        reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/animelordlis")],
-            [
-                InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data="about"),
-                InlineKeyboardButton('ʜᴇʟᴘ •', callback_data="help")
-            ]
-        ])
-    )
+#=====================================================================================##
 
 @Bot.on_message(filters.command('myplan') & filters.private)
 async def check_plan(client: Client, message: Message):
@@ -369,6 +347,7 @@ async def check_plan(client: Client, message: Message):
     # Send the response message to the user
     await message.reply(status_message)
 
+#=====================================================================================##
 # Command to add premium user
 @Bot.on_message(filters.command('addpremium') & filters.private & admin)
 async def add_premium_user_command(client, msg):
@@ -384,7 +363,7 @@ async def add_premium_user_command(client, msg):
             "Examples:\n"
             "/addpremium 123456789 30 m → 30 ᴍɪɴᴜᴛᴇꜱ\n"
             "/addpremium 123456789 2 h → 2 ʜᴏᴜʀꜱ\n"
-            "/addpremium 123456789 1 d → 1 ᴅᴀʏ\n"
+            "/addpremium 123456789 1 d → 1 ᴅᴀʏꜱ\n"
             "/addpremium 123456789 1 y → 1 ʏᴇᴀʀ"
         )
         return
@@ -418,6 +397,7 @@ async def add_premium_user_command(client, msg):
     except Exception as e:
         await msg.reply_text(f"⚠️ ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ: `{str(e)}`")
 
+
 # Command to remove premium user
 @Bot.on_message(filters.command('remove_premium') & filters.private & admin)
 async def pre_remove_user(client: Client, msg: Message):
@@ -427,9 +407,10 @@ async def pre_remove_user(client: Client, msg: Message):
     try:
         user_id = int(msg.command[1])
         await remove_premium(user_id)
-        await msg.reply_text(f"USER {user_id} HAS BEEN REMOVED.")
+        await msg.reply_text(f"User {user_id} has been removed.")
     except ValueError:
         await msg.reply_text("ᴜꜱᴇʀ_ɪᴅ ᴍᴜꜱᴛ ʙᴇ ᴀɴ ɪɴᴛᴇɢᴇʀ ᴏʀ ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ ɪɴ ᴅᴀᴛᴀʙᴀꜱᴇ.")
+
 
 # Command to list active premium users
 @Bot.on_message(filters.command('premium_users') & filters.private & admin)
@@ -463,7 +444,7 @@ async def list_premium_users_command(client, message):
             user_info = await client.get_users(user_id)
             username = user_info.username if user_info.username else "No Username"
             first_name = user_info.first_name
-            mention = user_info.mention
+            mention=user_info.mention
 
             # Calculate days, hours, minutes, seconds left
             days, hours, minutes, seconds = (
@@ -492,12 +473,18 @@ async def list_premium_users_command(client, message):
     else:
         await message.reply_text("\n\n".join(premium_user_list), parse_mode=None)
 
+
+#=====================================================================================##
+
 @Bot.on_message(filters.command("count") & filters.private & admin)
 async def total_verify_count_cmd(client, message: Message):
     total = await db.get_total_verify_count()
     await message.reply_text(f"Tᴏᴛᴀʟ ᴠᴇʀɪғɪᴇᴅ ᴛᴏᴋᴇɴs ᴛᴏᴅᴀʏ: <b>{total}</b>")
 
+
+#=====================================================================================##
+
 @Bot.on_message(filters.command('commands') & filters.private & admin)
-async def bcmd(bot: Bot, message: Message):
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")]])
-    await message.reply(text=CMD_TXT, reply_markup=reply_markup, quote=True)
+async def bcmd(bot: Bot, message: Message):        
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data = "close")]])
+    await message.reply(text=CMD_TXT, reply_markup = reply_markup, quote= True)
