@@ -16,8 +16,8 @@ OWNER_ID = int(os.environ.get("OWNER_ID", "7282066033")) # Owner id
 #--------------------------------------------
 PORT = os.environ.get("PORT", "8080")
 #--------------------------------------------
-DB_URI = os.environ.get("DATABASE_URL", "mongodbmongodb+srv://animelord:animelord@animelord.1g3ujsr.mongodb.net/?retryWrites=true&w=majority&appName=animelord")
-DB_NAME = os.environ.get("DATABASE_NAME", "animelord")
+DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://Anime:Anime@anime.suydbfe.mongodb.net/?retryWrites=true&w=majority&appName=Anime")
+DB_NAME = os.environ.get("DATABASE_NAME", "Anime")
 #--------------------------------------------
 FSUB_LINK_EXPIRY = int(os.getenv("FSUB_LINK_EXPIRY", "10"))  # 0 means no expiry
 BAN_SUPPORT = os.environ.get("BAN_SUPPORT", "https://t.me/CodeflixSupport")
