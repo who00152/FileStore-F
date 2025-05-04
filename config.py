@@ -3,7 +3,6 @@ from os import environ, getenv
 import logging
 from logging.handlers import RotatingFileHandler
 from pyrogram import filters
-from database.database import db
 
 # MehediYT69
 # --------------------------------------------
@@ -64,13 +63,13 @@ CMD_TXT = """<blockquote><b>» ᴀᴅᴍɪɴ ᴄᴏᴍᴍᴀɴᴅs:</b></blockqu
 <b>›› /admins :</b> ɢᴇᴛ ʟɪsᴛ ᴏꜰ ᴀᴅᴍɪɴs
 <b>›› /addpremium :</b> ᴀᴅᴅ ᴀ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ
 <b>›› /premium_users :</b> ʟɪsᴛ ᴀʟʟ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀs
-<b>›› /remove_premium :</b> ʀᴇᴍᴏᴠᴇ ᴘʀᴇᴍɪᴜᴍ ꜰʀᴏᴍ ᴀ ᴜꜱᴇʀ
-<b>›› /myplan :</b> ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴘʀᴇᴮɪᴜᴍ sᴛᴀᴛᴜs
+<b>›› /remove_premium :</b> ʀᴇᴍᴏᴠᴇ ᴘʀᴇᴍɪᴜᴍ ꜰʀᴏᴍ ᴀ ᴜꜸᴇʀ
+<b>›› /myplan :</b> ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴘʀᴇᴍɪᴜᴍ sᴛᴀᴛᴜs
 <b>›› /pic :</b> ᴍᴀɴᴀɢᴇ ɪᴍᴀɢᴇꜱ ꜰᴏʀ sᴛᴀʀᴛ, ʜᴇʟᴘ, ᴀɴᴅ ᴀʙᴏᴜᴛ
 <b>›› /set_pic :</b> sᴇᴛ ɪᴍᴀɢᴇꜱ ꜰᴏʀ sᴛᴀʀᴛ, ʜᴇʟᴘ, ᴏʀ ᴀʙᴏᴜᴛ
-<b>›› /rev_pic :</b> ʀᴇᴍᴏᴠᴇ ɪᴍᴀɢᴇꜱ ꜰʀᴏᴍ sᴛᴀʀᴛ, ʜᴇʟᴘ, ᴏʀ ᴀʙᴏᴜᴛ
+<b>›› /rev_pic :</b> ʀᴇᴍᴏᴠᴇ ɪᴍᴀɢᴇꜸ ꜰʀᴏᴍ sᴛᴀʀᴛ, ʜᴇʟᴘ, ᴏʀ ᴀʙᴏᴜᴛ
 <b>›› /rev_start <number> :</b> ʀᴇᴍᴏᴠᴇ ᴀ sᴘᴇᴄɪꜰɪᴄ sᴛᴀʀᴛ ɪᴍᴀɢᴇ
-<b>›› /rev_all_start :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ sᴛᴀʀᴛ ɪᴮɪᴍᴀɢᴇꜸ
+<b>›› /rev_all_start :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ sᴛᴀʀᴛ ɪᴍᴀɢᴇꜸ
 <b>›› /rev_help <number> :</b> ʀᴇᴍᴏᴠᴇ ᴀ sᴘᴇᴄɪꜰɪᴄ ʜᴇʟᴘ ɪᴍᴀɢᴇ
 <b>›› /rev_all_help :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ ʜᴇʟᴘ ɪᴍᴀɢᴇꜸ
 <b>›› /rev_about <number> :</b> ʀᴇᴍᴏᴠᴇ ᴀ sᴘᴇᴄɪꜰɪᴄ ᴀʙᴏᴜᴛ ɪᴍᴀɢᴇ
