@@ -2,118 +2,70 @@ import os
 import sys
 import asyncio
 import logging
-import signal
-from pyrogram import Client
+from pyrogram import Client, filters
+from pyrogram.handlers import MessageHandler
+from config import API_HASH, APP_ID, LOGGER, OWNER_ID, TG_BOT_TOKEN, TG_BOT_WORKERS, CHANNEL_ID, PORT, DB_URI, DB_NAME
 from aiohttp import web
-from config import (
-    API_HASH,
-    APP_ID,
-    LOGGER,
-    OWNER_ID,
-    TG_BOT_TOKEN,
-    TG_BOT_WORKERS,
-    CHANNEL_ID,
-    PORT,
-    DB_URI,
-    DB_NAME
-)
+from plugins import web_server
 from database.database import Database
 
-# Initialize database
 db = Database(DB_URI, DB_NAME, "users")
 
-# Configure logging
+__version__ = "1.0.0"
+
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
-logger = logging.getLogger(__name__)
+logging.getLogger("pyrogram.client").setLevel(logging.WARNING)
+logging.getLogger("pyrogram.session.auth").setLevel(logging.CRITICAL)
+logging.getLogger("pyrogram.session.session").setLevel(logging.CRITICAL)
 
 class Bot(Client):
     def __init__(self):
         super().__init__(
-            name="Bot",
+            "Bot",
             api_hash=API_HASH,
             api_id=APP_ID,
             bot_token=TG_BOT_TOKEN,
             workers=TG_BOT_WORKERS,
             plugins={"root": "plugins"},
         )
+        self.LOGGER = LOGGER
         self.uptime = None
 
     async def start(self):
         await super().start()
         self.uptime = asyncio.get_event_loop().time()
-        logger.info("Bot is starting...")
-        logger.info(f"Bot deployed by @who-am-i")
-        logger.info(f"Bot made by @AnimeLord")
-        logger.info("✅ Bot is now alive and running!")
+        self.LOGGER(__name__).info("ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..!")
+        self.LOGGER(__name__).info(f"ʙᴏᴛ ᴅᴇᴘʟᴏʏᴇᴅ ʙʏ @ᴡʜᴏ-ᴀᴍ-ɪ")
+        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..! ᴍᴀᴅᴇ ʙʏ @Aɴɪᴍᴇ Lᴏʀᴅ")
+        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ɴᴏᴡ ᴀʟɪᴠᴇ. ᴛʜᴀɴᴋꜱ ᴛᴏ @ᴡʜᴏ-ᴀᴍ-ɪ")
 
     async def stop(self, *args):
-        logger.info("🛑 Bot is stopping...")
         await super().stop()
-        logger.info("🌀 Bot stopped successfully")
+        self.LOGGER(__name__).info("Bot stopped.")
 
-async def health_check(request):
-    """Essential health check endpoint"""
-    return web.Response(text="OK", status=200)
-
-async def web_server():
-    """Create web application with routes"""
-    app = web.Application()
-    app.router.add_get("/", health_check)
-    app.router.add_get("/health", health_check)
-    # Add your other routes here
-    return app
+app = Bot()
 
 async def main():
-    # Initialize bot
-    bot = Bot()
-    await bot.start()
-    
-    # Setup web server
+    await app.start()
     port = int(os.environ.get("PORT", PORT))
-    app = await web_server()
-    runner = web.AppRunner(app)
-    await runner.setup()
-    
-    site = web.TCPSite(runner, "0.0.0.0", port)
-    await site.start()
-    logger.info(f"🌐 Web server started on port {port}")
-    
-    # Signal handling for graceful shutdown
-    loop = asyncio.get_running_loop()
-    stop_event = asyncio.Event()
-    
-    def signal_handler(sig):
-        logger.info(f"Received signal {sig.name}, shutting down...")
-        loop.call_soon_threadsafe(stop_event.set)
-    
-    for sig in (signal.SIGTERM, signal.SIGINT):
-        loop.add_signal_handler(sig, signal_handler, sig)
-    
-    # Keep the application running
     try:
-        await stop_event.wait()
+        server = web.AppRunner(await web_server())
+        await server.setup()
+        await web.TCPSite(server, "0.0.0.0", port).start()
+        app.LOGGER(__name__).info(f"Web server started on port {port}")
+        await asyncio.Event().wait()
     except Exception as e:
-        logger.error(f"Unexpected error: {e}")
+        app.LOGGER(__name__).error(f"Failed to start web server: {e}")
+        raise
     finally:
-        logger.info("Starting cleanup process...")
-        await site.stop()
-        await runner.cleanup()
-        await bot.stop()
-        logger.info("✅ Cleanup completed")
+        await app.stop()
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
-    except KeyboardInterrupt:
-        logger.info("Keyboard interrupt received")
-    except Exception as e:
-        logger.error(f"Fatal error: {e}")
-    finally:
-        logger.info("Application terminated")
+    except (KeyboardInterrupt, SystemExit):
+        LOGGER(__name__).info("Bot stopped!")
