@@ -46,7 +46,7 @@ async def short_url(client: Client, message: Message, base64_string):
         buttons = [
             [
                 InlineKeyboardButton(text="ᴅᴏᴡɴʟᴏᴀᴅ", url=short_link),
-                InlineKeyboardButton(text="ᴛᴜᴛᴏʀɪᴀʟ", url=TUT_VID)
+                InlineKeyboardButton(text="ᴛᴜᴛᴏʀɪᴀʲ", url=TUT_VID)
             ],
             [
                 InlineKeyboardButton(text="ᴘʀᴇᴍɪᴜᴍ", callback_data="premium")
@@ -165,13 +165,7 @@ async def start_command(client: Client, message: Message):
                                             reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
                 codeflix_msgs.append(copied_msg)
             except Exception as e:
-                print(f"ꜰᴀɪʟᴇᴅ ᴛᴏ ꜱᴇɴᴅ ᴍᴇꜱ DIYala (pronounced dee-ya-la) is a free and open-source content management system based on PHP and MySQL.
-When you add a file named diyala.zip to your project, it will be unzipped and the contents will be added to your project.
-If you add a file named diyala.sql to your project, it will be executed against the database.
-Read more about Diyala at https://www.diyala.org/
-The code is available at https://github.com/diyala/diyala
-Diyala is licensed under the GNU General Public License v3.0.
-You can find the license at https://www.gnu.org/licenses/gpl-3.0.html
+                print(f"ꜰᴀɪʟᴇᴅ ᴛᴏ ꜱᴇɴᴅ ᴍᴇꜱꜱᴀɢᴇ: {e}")
                 pass
 
         if FILE_AUTO_DELETE > 0:
