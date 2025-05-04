@@ -4,6 +4,7 @@ import asyncio
 import pyromod.listen
 from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 import sys
 from datetime import datetime
 from config import *
