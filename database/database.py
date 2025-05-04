@@ -1,5 +1,6 @@
 #Aɴɪᴍᴇ Lᴏʀᴅ
 #Who-Am-I
+# database.py
 
 import motor, asyncio
 import motor.motor_asyncio
@@ -33,7 +34,6 @@ def new_user(id):
     }
 
 class Rohit:
-
     def __init__(self, DB_URI, DB_NAME):
         self.dbclient = motor.motor_asyncio.AsyncIOMotorClient(DB_URI)
         self.database = self.dbclient[DB_NAME]
@@ -48,8 +48,7 @@ class Rohit:
         self.fsub_data = self.database['fsub']   
         self.rqst_fsub_data = self.database['request_forcesub']
         self.rqst_fsub_Channel_data = self.database['request_forcesub_channel']
-        
-
+        self.bot_settings = self.database['bot_settings']  # New collection for images and settings
 
     # USER DATA
     async def present_user(self, user_id: int):
@@ -68,7 +67,6 @@ class Rohit:
     async def del_user(self, user_id: int):
         await self.user_data.delete_one({'_id': user_id})
         return
-
 
     # ADMIN DATA
     async def admin_exist(self, admin_id: int):
@@ -90,7 +88,6 @@ class Rohit:
         user_ids = [doc['_id'] for doc in users_docs]
         return user_ids
 
-
     # BAN USER DATA
     async def ban_user_exist(self, user_id: int):
         found = await self.banned_user_data.find_one({'_id': user_id})
@@ -111,8 +108,6 @@ class Rohit:
         user_ids = [doc['_id'] for doc in users_docs]
         return user_ids
 
-
-
     # AUTO DELETE TIMER SETTINGS
     async def set_del_timer(self, value: int):        
         existing = await self.del_timer_data.find_one({})
@@ -126,7 +121,6 @@ class Rohit:
         if data:
             return data.get('value', 600)
         return 0
-
 
     # CHANNEL MANAGEMENT
     async def channel_exist(self, channel_id: int):
@@ -148,8 +142,7 @@ class Rohit:
         channel_ids = [doc['_id'] for doc in channel_docs]
         return channel_ids
 
-    
-# Get current mode of a channel
+    # Get current mode of a channel
     async def get_channel_mode(self, channel_id: int):
         data = await self.fsub_data.find_one({'_id': channel_id})
         return data.get("mode", "off") if data else "off"
@@ -163,8 +156,6 @@ class Rohit:
         )
 
     # REQUEST FORCE-SUB MANAGEMENT
-
-    # Add the user to the set of users for a   specific channel
     async def req_user(self, channel_id: int, user_id: int):
         try:
             await self.rqst_fsub_Channel_data.update_one(
@@ -175,16 +166,12 @@ class Rohit:
         except Exception as e:
             print(f"[ᴅʙ ᴇʀʀᴏʀ] ꜰᴀɪʟᴇᴅ ᴛᴏ ᴀᴅᴅ ᴜꜱᴇʀ ᴛᴏ ʀᴇǫᴜᴇꜱᴛ ʟɪꜱᴛ: {e}")
 
-
-    # Method 2: Remove a user from the channel set
     async def del_req_user(self, channel_id: int, user_id: int):
-        # Remove the user from the set of users for the channel
         await self.rqst_fsub_Channel_data.update_one(
             {'_id': channel_id}, 
             {'$pull': {'user_ids': user_id}}
         )
 
-    # Check if the user exists in the set of the channel's users
     async def req_user_exist(self, channel_id: int, user_id: int):
         try:
             found = await self.rqst_fsub_Channel_data.find_one({
@@ -196,22 +183,9 @@ class Rohit:
             print(f"[ᴅʙ ᴇʀʀᴏʀ] ꜰᴀɪʟᴇᴅ ᴛᴏ ᴄʜᴇᴄᴋ ʀᴇǫᴜᴇꜱᴛ ʟɪꜱᴛ: {e}")
             return False  
 
-
-    # Method to check if a channel exists using show_channels
     async def reqChannel_exist(self, channel_id: int):
-    # Get the list of all channel IDs from the database
         channel_ids = await self.show_channels()
-        #print(f"All channel IDs in the database: {channel_ids}")
-
-    # Check if the given channel_id is in the list of channel IDs
-        if channel_id in channel_ids:
-            #print(f"Channel {channel_id} found in the database.")
-            return True
-        else:
-            #print(f"Channel {channel_id} NOT found in the database.")
-            return False
-
-
+        return channel_id in channel_ids
 
     # VERIFICATION MANAGEMENT
     async def db_verify_status(self, user_id):
@@ -235,31 +209,53 @@ class Rohit:
         current['link'] = link
         await self.db_update_verify_status(user_id, current)
 
-    # Set verify count (overwrite with new value)
     async def set_verify_count(self, user_id: int, count: int):
         await self.sex_data.update_one({'_id': user_id}, {'$set': {'verify_count': count}}, upsert=True)
 
-    # Get verify count (default to 0 if not found)
     async def get_verify_count(self, user_id: int):
         user = await self.sex_data.find_one({'_id': user_id})
-        if user:
-            return user.get('verify_count', 0)
-        return 0
+        return user.get('verify_count', 0) if user else 0
 
-    # Reset all users' verify counts to 0
     async def reset_all_verify_counts(self):
-        await self.sex_data.update_many(
-            {},
-            {'$set': {'verify_count': 0}} 
-        )
+        await self.sex_data.update_many({}, {'$set': {'verify_count': 0}})
 
-    # Get total verify count across all users
     async def get_total_verify_count(self):
-        pipeline = [
-            {"$group": {"_id": None, "total": {"$sum": "$verify_count"}}}
-        ]
+        pipeline = [{"$group": {"_id": None, "total": {"$sum": "$verify_count"}}}]
         result = await self.sex_data.aggregate(pipeline).to_list(length=1)
         return result[0]["total"] if result else 0
 
+    # IMAGE MANAGEMENT
+    async def add_image(self, type: str, file_id: str):
+        settings = await self.bot_settings.find_one({"_id": "images"})
+        if not settings:
+            settings = {"_id": "images", "start": [], "help": [], "about": []}
+        settings[type].append(file_id)
+        await self.bot_settings.update_one({"_id": "images"}, {"$set": settings}, upsert=True)
+
+    async def remove_image(self, type: str, index: int):
+        settings = await self.bot_settings.find_one({"_id": "images"})
+        if settings and type in settings and index < len(settings[type]):
+            settings[type].pop(index)
+            await self.bot_settings.update_one({"_id": "images"}, {"$set": settings})
+
+    async def clear_images(self, type: str):
+        settings = await self.bot_settings.find_one({"_id": "images"})
+        if settings and type in settings:
+            settings[type] = []
+            await self.bot_settings.update_one({"_id": "images"}, {"$set": settings})
+
+    async def get_images(self, type: str):
+        settings = await self.bot_settings.find_one({"_id": "images"})
+        return settings[type] if settings and type in settings else []
+
+    async def set_temp_state(self, chat_id: int, state: str):
+        await self.bot_settings.update_one({"chat_id": chat_id}, {"$set": {"state": state}}, upsert=True)
+
+    async def get_temp_state(self, chat_id: int):
+        state = await self.bot_settings.find_one({"chat_id": chat_id})
+        return state["state"] if state else None
+
+    async def clear_temp_state(self, chat_id: int):
+        await self.bot_settings.delete_one({"chat_id": chat_id})
 
 db = Rohit(DB_URI, DB_NAME)
