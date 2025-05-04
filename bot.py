@@ -4,12 +4,12 @@ import asyncio
 import logging
 from pyrogram import Client, filters
 from pyrogram.handlers import MessageHandler
-from config import API_HASH, APP_ID, LOGGER, OWNER_ID, TG_BOT_TOKEN, TG_BOT_WORKERS, FORCE_SUB_CHANNEL, CHANNEL_ID, PORT, DB_URI, DB_NAME, COLLECTION_NAME
+from config import API_HASH, APP_ID, LOGGER, OWNER_ID, TG_BOT_TOKEN, TG_BOT_WORKERS, CHANNEL_ID, PORT, DB_URI, DB_NAME
 from aiohttp import web
 from plugins import web_server
 from database.database import Database
 
-db = Database(DB_URI, DB_NAME, COLLECTION_NAME)
+db = Database(DB_URI, DB_NAME, "users")
 
 __version__ = "1.0.0"
 
@@ -46,14 +46,6 @@ class Bot(Client):
     async def stop(self, *args):
         await super().stop()
         self.LOGGER(__name__).info("Bot stopped.")
-
-async def check_admin(client, message):
-    user_id = message.from_user.id
-    if user_id == OWNER_ID:
-        return True
-    return await db.admin_exist(user_id)
-
-admin = filters.create(check_admin)
 
 app = Bot()
 
