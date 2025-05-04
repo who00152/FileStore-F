@@ -11,7 +11,7 @@ from config import *
 from database.database import *
 
 name ="""
- **BY Aɴɪᴍᴇ Lᴏʀᴅ**
+ **BY Anime Lord**
 """
 
 class Bot(Client):
@@ -40,56 +40,58 @@ class Bot(Client):
             await test.delete()
         except Exception as e:
             self.LOGGER(__name__).warning(e)
-            self.LOGGER(__name__).warning(f"ᴍᴀᴋᴇ ꜱᴜʀᴇ ʙᴏᴛ ɪꜱ ᴀᴅᴍɪɴ ɪɴ ᴅʙ ᴄʜᴀɴɴᴇʟ, ᴀɴᴅ ᴅᴏᴜʙʟᴇ ᴄʜᴇᴄᴋ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ_ɪᴅ ᴠᴀʟᴜᴇ, ᴄᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ {CHANNEL_ID}")
-            self.LOGGER(__name__).info("\nʙᴏᴛ ꜱᴛᴏᴘᴘᴇᴅ. ᴊᴏɪɴ https://t.me/+3lpawaYvxBU4YTY1 ꜰᴏʀ ꜱᴜᴘᴘᴏʀᴛ")
+            self.LOGGER(__name__).warning(f"Make sure bot is admin in DB channel, and double check the CHANNEL_ID value, current value {CHANNEL_ID}")
+            self.LOGGER(__name__).info("\nBot stopped. Join https://t.me/+3lpawaYvxBU4YTY1 for support")
             sys.exit()
 
         self.set_parse_mode(ParseMode.HTML)
-        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..!\n\nᴄʀᴇᴀᴛᴇᴅ ʙʏ \n ᴡʜᴏ-ᴀᴍ-ɪ")
-        self.LOGGER(__name__).info(f"""ʙᴏᴛ ᴅᴇᴘʟᴏʏᴇᴅ ʙʏ @ᴡʜᴏ-ᴀᴍ-ɪ""")
+        self.LOGGER(__name__).info(f"Bot is alive..!\n\nCreated by \n Who-Am-I")
+        self.LOGGER(__name__).info(f"""Bot deployed by @Who-Am-I""")
 
         self.set_parse_mode(ParseMode.HTML)
         self.username = usr_bot_me.username
-        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..! ᴍᴀᴅᴇ ʙʏ @Aɴɪᴍᴇ Lᴏʀᴅ")   
+        self.LOGGER(__name__).info(f"Bot is alive..! Made by @Anime_Lord")   
 
         app = web.AppRunner(await web_server())
         await app.setup()
         await web.TCPSite(app, "0.0.0.0", PORT).start()
 
         try:
-            await self.send_message(OWNER_ID, text=f"<b><blockquote> Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ by @Anime_Lord_Bot</blockquote></b>")
+            await self.send_message(OWNER_ID, text=f"<b><blockquote> Bot Restarted by @Anime_Lord_Bot</blockquote></b>")
         except:
             pass
 
     async def stop(self, *args):
         await super().stop()
-        self.LOGGER(__name__).info("ʙᴏᴛ ꜱᴛᴏᴘᴘᴇᴅ.")
+        self.LOGGER(__name__).info("Bot stopped.")
 
     def run(self):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.start())
-        self.LOGGER(__name__).info("ʙᴏᴛ ɪꜱ ɴᴏᴡ ᴀʟɪᴠᴇ. ᴛʜᴀɴᴋꜱ ᴛᴏ @ᴡʜᴏ-ᴀᴍ-ɪ")
+        self.LOGGER(__name__).info("Bot is now alive. Thanks to @Who-Am-I")
         try:
             loop.run_forever()
         except KeyboardInterrupt:
-            self.LOGGER(__name__).info("ꜰᴜᴄᴋɪɴ ᴅᴏᴡɴ...")
+            self.LOGGER(__name__).info("Shutting down...")
         finally:
             loop.run_until_complete(self.stop())
 
-# Handle admin photo uploads for setting images
 @Bot.on_message(filters.photo & filters.private & admin)
 async def handle_admin_photo(client: Client, message: Message):
     chat_id = message.chat.id
     state = await db.get_temp_state(chat_id)
-    if state in ["set_start", "set_help", "set_about"]:
-        type_map = {"set_start": "start", "set_help": "help", "set_about": "about"}
-        type = type_map[state]
-        file_id = message.photo.file_id
-        await db.add_image(type, file_id)
-        await message.reply_text(
-            f"New {type} image was set! Now current number of {type} images: {len(await db.get_images(type))}",
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]])
-        )
-        await db.clear_temp_state(chat_id)
-    else:
-        await message.reply_text("I'm not waiting for any image.")
+    try:
+        if state in ["set_start", "set_help", "set_about"]:
+            type_map = {"set_start": "start", "set_help": "help", "set_about": "about"}
+            image_type = type_map[state]
+            file_id = message.photo.file_id
+            await db.add_image(image_type, file_id)
+            await message.reply_text(
+                f"New {image_type} image set successfully! Total {image_type} images: {len(await db.get_images(image_type))}",
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Close", callback_data="close")]])
+            )
+            await db.clear_temp_state(chat_id)
+        else:
+            await message.reply_text("No image setting command is active. Use /set_pic to start.")
+    except Exception as e:
+        await message.reply_text(f"Error processing image: {str(e)}")
