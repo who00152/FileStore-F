@@ -1,78 +1,133 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-import os
-from os import environ
+from config import DB_URI, DB_NAME, COLLECTION_NAME
 
-# Database configuration
-DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://animelord:animelord@animelord.1g3ujsr.mongodb.net/?retryWrites=true&w=majority&appName=animelord")
-DB_NAME = os.environ.get("DATABASE_NAME", "animelord")
+class Database:
+    def __init__(self, uri, database_name, collection_name):
+        self.client = AsyncIOMotorClient(uri)
+        self.db = self.client[database_name][collection_name]
+        self.ban_collection = self.client[database_name]["banned_users"]
+        self.admin_collection = self.client[database_name]["admins"]
+        self.user_collection = self.client[database_name]["users"]
+        self.channel_collection = self.client[database_name]["channels"]
+        self.image_collection = self.client[database_name]["images"]
+        self.temp_collection = self.client[database_name]["temp"]
+        self.verify_collection = self.client[database_name]["verify"]
+        self.request_collection = self.client[database_name]["requests"]
 
-# Initialize MongoDB client
-client = AsyncIOMotorClient(DB_URI)
-db = client[DB_NAME]
+    async def add_ban_user(self, user_id):
+        await self.ban_collection.update_one(
+            {"user_id": user_id}, {"$set": {"user_id": user_id}}, upsert=True
+        )
 
-# Collections
-admins_collection = db["admins"]
-images_collection = db["images"]
-temp_state_collection = db["temp_state"]
+    async def del_ban_user(self, user_id):
+        await self.ban_collection.delete_one({"user_id": user_id})
 
-async def add_admin(user_id: int):
-    """Add a user ID to the admins collection."""
-    await admins_collection.update_one(
-        {"user_id": user_id},
-        {"$set": {"user_id": user_id}},
-        upsert=True
-    )
+    async def get_ban_users(self):
+        cursor = self.ban_collection.find({})
+        return [doc["user_id"] async for doc in cursor]
 
-async def del_admin(user_id: int):
-    """Remove a user ID from the admins collection."""
-    await admins_collection.delete_one({"user_id": user_id})
+    async def add_admin(self, admin_id):
+        await self.admin_collection.update_one(
+            {"admin_id": admin_id}, {"$set": {"admin_id": admin_id}}, upsert=True
+        )
 
-async def get_all_admins():
-    """Get a list of all admin user IDs."""
-    admins = await admins_collection.find().to_list(None)
-    return [admin["user_id"] for admin in admins]
+    async def del_admin(self, admin_id):
+        await self.admin_collection.delete_one({"admin_id": admin_id})
 
-async def add_image(image_type: str, file_id: str):
-    """Add an image file ID to the specified image type collection."""
-    await images_collection.update_one(
-        {"type": image_type},
-        {"$push": {"file_ids": file_id}},
-        upsert=True
-    )
+    async def get_all_admins(self):
+        cursor = self.admin_collection.find({})
+        return [doc["admin_id"] async for doc in cursor]
 
-async def get_images(image_type: str):
-    """Get all image file IDs for the specified image type."""
-    doc = await images_collection.find_one({"type": image_type})
-    return doc["file_ids"] if doc and "file_ids" in doc else []
+    async def admin_exist(self, admin_id):
+        return await self.admin_collection.find_one({"admin_id": admin_id}) is not None
 
-async def remove_image(image_type: str, index: int):
-    """Remove an image file ID at the specified index for the image type."""
-    await images_collection.update_one(
-        {"type": image_type},
-        {"$unset": {f"file_ids.{index}": ""}}
-    )
-    await images_collection.update_one(
-        {"type": image_type},
-        {"$pull": {"file_ids": None}}
-    )
+    async def add_user(self, user_id):
+        await self.user_collection.update_one(
+            {"user_id": user_id}, {"$set": {"user_id": user_id}}, upsert=True
+        )
 
-async def clear_images(image_type: str):
-    """Clear all image file IDs for the specified image type."""
-    await images_collection.delete_one({"type": image_type})
+    async def del_user(self, user_id):
+        await self.user_collection.delete_one({"user_id": user_id})
 
-async def get_temp_state(chat_id: int):
-    """Get the temporary state for a chat ID."""
-    doc = await temp_state_collection.find_one({"chat_id": chat_id})
-    return doc["state"] if doc and "state" in doc else None
+    async def present_user(self, user_id):
+        return await self.user_collection.find_one({"user_id": user_id}) is not None
 
-async def set_temp_state(chat_id: int, state: str):
-    """Set the temporary state for a chat ID."""
-    await temp_state_collection.update_one(
-        {"chat_id": chat_id},
-        {"$set": {"chat_id": chat_id, "state": state}},
-        upsert=True
-    )
+    async def full_userbase(self):
+        cursor = self.user_collection.find({})
+        return [doc["user_id"] async for doc in cursor]
 
-async def clear_temp_state(chat_id: int):
-    """Clear the temporary state for a chat ID."""
-    await temp_state_collection.delete_one({"chat_id": chat_id})
+    async def add_channel(self, channel_id):
+        await self.channel_collection.update_one(
+            {"channel_id": channel_id}, {"$set": {"channel_id": channel_id, "mode": "on"}}, upsert=True
+        )
+
+    async def rem_channel(self, channel_id):
+        await self.channel_collection.delete_one({"channel_id": channel_id})
+
+    async def show_channels(self):
+        cursor = self.channel_collection.find({})
+        return [doc["channel_id"] async for doc in cursor]
+
+    async def get_channel_mode(self, channel_id):
+        doc = await self.channel_collection.find_one({"channel_id": channel_id})
+        return doc.get("mode", "on") if doc else "on"
+
+    async def set_channel_mode(self, channel_id, mode):
+        await self.channel_collection.update_one(
+            {"channel_id": channel_id}, {"$set": {"mode": mode}}, upsert=True
+        )
+
+    async def add_image(self, type, image_id):
+        await self.image_collection.update_one(
+            {"type": type}, {"$push": {"images": image_id}}, upsert=True
+        )
+
+    async def get_images(self, type):
+        doc = await self.image_collection.find_one({"type": type})
+        return doc.get("images", []) if doc else []
+
+    async def remove_image(self, type, index):
+        await self.image_collection.update_one(
+            {"type": type}, {"$pull": {"images": {"$position": index}}}
+        )
+
+    async def clear_images(self, type):
+        await self.image_collection.delete_one({"type": type})
+
+    async def set_temp_state(self, chat_id, state):
+        await self.temp_collection.update_one(
+            {"chat_id": chat_id}, {"$set": {"state": state}}, upsert=True
+        )
+
+    async def get_temp_state(self, chat_id):
+        doc = await self.temp_collection.find_one({"chat_id": chat_id})
+        return doc.get("state") if doc else None
+
+    async def set_del_timer(self, duration):
+        await self.temp_collection.update_one(
+            {"key": "delete_timer"}, {"$set": {"duration": duration}}, upsert=True
+        )
+
+    async def get_del_timer(self):
+        doc = await self.temp_collection.find_one({"key": "delete_timer"})
+        return doc.get("duration", 0) if doc else 0
+
+    async def get_total_verify_count(self):
+        doc = await self.verify_collection.find_one({"key": "total_verify"})
+        return doc.get("count", 0) if doc else 0
+
+    async def reqChannel_exist(self, channel_id):
+        return await self.request_collection.find_one({"channel_id": channel_id}) is not None
+
+    async def req_user(self, channel_id, user_id):
+        await self.request_collection.update_one(
+            {"channel_id": channel_id, "user_id": user_id},
+            {"$set": {"channel_id": channel_id, "user_id": user_id}},
+            upsert=True
+        )
+
+    async def req_user_exist(self, channel_id, user_id):
+        return await self.request_collection.find_one({"channel_id": channel_id, "user_id": user_id}) is not None
+
+    async def del_req_user(self, channel_id, user_id):
+        await self.request_collection.delete_one({"channel_id": channel_id, "user_id": user_id})
