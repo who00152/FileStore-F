@@ -5,13 +5,13 @@ class Database:
     def __init__(self, uri, database_name):
         self._client = AsyncIOMotorClient(uri)
         self.db = self._client[database_name]
-        self.users = self.db.users  # Users collection
-        self.ban_users = self.db.ban_users  # Banned users collection
-        self.channels = self.db.channels  # Channels collection
-        self.images = self.db.images  # Images collection
-        self.timer = self.db.timer  # Auto-delete timer collection
-        self.join_requests = self.db.join_requests  # Join requests collection
-        self.admins = self.db.admins  # Admins collection
+        self.users = self.db.users
+        self.ban_users = self.db.ban_users
+        self.channels = self.db.channels
+        self.images = self.db.images
+        self.timer = self.db.timer
+        self.join_requests = self.db.join_requests
+        self.admins = self.db.admins
 
     async def add_user(self, user_id: int):
         """Add a user to the users collection."""
@@ -178,5 +178,4 @@ class Database:
         """Delete a join request for a user and channel."""
         await self.join_requests.delete_one({"_id": f"{channel_id}_{user_id}"})
 
-# Initialize the database
 db = Database(DB_URI, DB_NAME)
