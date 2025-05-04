@@ -11,6 +11,7 @@ class Database:
         self.images = self.db.images  # Images collection
         self.timer = self.db.timer  # Auto-delete timer collection
         self.join_requests = self.db.join_requests  # Join requests collection
+        self.admins = self.db.admins  # Admins collection
 
     async def add_user(self, user_id: int):
         """Add a user to the users collection."""
@@ -94,7 +95,7 @@ class Database:
 
     async def add_admin(self, admin_id: int):
         """Add an admin to the admins collection."""
-        await self.db.admins.update_one(
+        await self.admins.update_one(
             {"_id": admin_id},
             {"$set": {"_id": admin_id}},
             upsert=True
@@ -102,12 +103,16 @@ class Database:
 
     async def del_admin(self, admin_id: int):
         """Remove an admin from the admins collection."""
-        await self.db.admins.delete_one({"_id": admin_id})
+        await self.admins.delete_one({"_id": admin_id})
 
     async def get_all_admins(self) -> list:
         """Get all admin IDs."""
-        admins = await self.db.admins.find().to_list(None)
+        admins = await self.admins.find().to_list(None)
         return [admin["_id"] for admin in admins]
+
+    async def admin_exist(self, user_id: int) -> bool:
+        """Check if a user is an admin."""
+        return bool(await self.admins.find_one({"_id": user_id}))
 
     async def set_temp_state(self, user_id: int, state: str):
         """Set temporary state for a user."""
@@ -157,8 +162,8 @@ class Database:
         """Check if a channel exists in the channels collection."""
         return bool(await self.channels.find_one({"_id": channel_id}))
 
-    async def req_user(self, channel_id: int, user_id: int):
-        """Add a user to the channel's join request list."""
+    async def add_join_request(self, channel_id: int, user_id: int):
+        """Add a join request for a user to a channel."""
         await self.join_requests.update_one(
             {"_id": f"{channel_id}_{user_id}"},
             {"$set": {"channel_id": channel_id, "user_id": user_id}},
@@ -166,11 +171,11 @@ class Database:
         )
 
     async def req_user_exist(self, channel_id: int, user_id: int) -> bool:
-        """Check if a user exists in the channel's join request list."""
+        """Check if a join request exists for a user and channel."""
         return bool(await self.join_requests.find_one({"_id": f"{channel_id}_{user_id}"}))
 
     async def del_req_user(self, channel_id: int, user_id: int):
-        """Remove a user from the channel's join request list."""
+        """Delete a join request for a user and channel."""
         await self.join_requests.delete_one({"_id": f"{channel_id}_{user_id}"})
 
 # Initialize the database
