@@ -1,5 +1,3 @@
-# admin.py
-
 import asyncio
 import os
 import random
