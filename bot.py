@@ -10,7 +10,13 @@ from datetime import datetime
 from config import *
 from database.database import *
 
-name ="""
+name = """
+▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄
+ A N I M E _ L O R D  イズ  ヒア
+▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
+   ╔╦╗┳ ┳╦ ╦╔═╗╔╗╔╔═╗╦ ╦
+    ║ ┃ ┃║ ║╠╣ ║║║║  ╠═╣
+    ╩ ┻ ┻╚═╝╚  ╝╚╝╚═╝╩ ╩
  **BY Anime Lord**
 """
 
@@ -46,20 +52,28 @@ class Bot(Client):
 
         self.set_parse_mode(ParseMode.HTML)
         self.LOGGER(__name__).info(f"Bot is alive..!\n\nCreated by \n Who-Am-I")
-        self.LOGGER(__name__).info(f"""Bot deployed by @Who-Am-I""")
+        self.LOGGER(__name__).info(f"Bot deployed by @Who-Am-I")
+        self.LOGGER(__name__).info(f"""
+▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄
+ A N I M E _ L O R D  イズ  ヒア
+▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
+   ╔╦╗┳ ┳╦ ╦╔═╗╔╗╔╔═╗╦ ╦
+    ║ ┃ ┃║ ║╠╣ ║║║║  ╠═╣
+    ╩ ┻ ┻╚═╝╚  ╝╚╝╚═╝╩ ╩
+""")  # Exact ASCII art as requested
 
         self.set_parse_mode(ParseMode.HTML)
         self.username = usr_bot_me.username
-        self.LOGGER(__name__).info(f"Bot is alive..! Made by @Anime_Lord")   
+        self.LOGGER(__name__).info(f"Bot is alive..! Made by @ A N I M E _ L O R D  イズ  ヒア")   
 
         app = web.AppRunner(await web_server())
         await app.setup()
         await web.TCPSite(app, "0.0.0.0", PORT).start()
 
         try:
-            await self.send_message(OWNER_ID, text=f"<b><blockquote> Bot Restarted by @Anime_Lord_Bot</blockquote></b>")
-        except:
-            pass
+            await self.send_message(OWNER_ID, text=f"<b><blockquote>Bot Restarted by @ A N I M E _ L O R D  イズ  ヒア\n\n<code>{name}</code></blockquote></b>")
+        except Exception as e:
+            self.LOGGER(__name__).warning(f"Failed to send startup message to OWNER_ID: {str(e)}")
 
     async def stop(self, *args):
         await super().stop()
@@ -68,7 +82,7 @@ class Bot(Client):
     def run(self):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.start())
-        self.LOGGER(__name__).info("Bot is now alive. Thanks to @Who-Am-I")
+        self.LOGGER(__name__).info(f"Bot is now alive. Thanks to @Who-Am-I\n\n{name}")  # ASCII art in run logs
         try:
             loop.run_forever()
         except KeyboardInterrupt:
