@@ -10,13 +10,7 @@ from datetime import datetime
 from config import *
 
 name = """
-▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄
- A N I M E _ L O R D  イズ  ヒア
-▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
-   ╔╦╗┳ ┳╦ ╦╔═╗╔╗╔╔═╗╦ ╦
-    ║ ┃ ┃║ ║╠╣ ║║║║  ╠═╣
-    ╩ ┻ ┻╚═╝╚  ╝╚╝╚═╝╩ ╩
- **BY Aɴɪᴍᴇ Lᴏʀᴅ**
+A N I M E _ L O R D  イズ  ヒア
 """
 
 class Bot(Client):
@@ -52,15 +46,6 @@ class Bot(Client):
         self.set_parse_mode(ParseMode.HTML)
         self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..!\n\nᴄʀᴇᴀᴛᴇᴅ ʙʏ \n ᴡʜᴏ-ᴀᴍ-ɪ")
         self.LOGGER(__name__).info(f"ʙᴏᴛ ᴅᴇᴘʟᴏʏᴇᴅ ʙʏ @ᴡʜᴏ-ᴀᴍ-ɪ")
-        self.LOGGER(__name__).info(f"""
-▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄
- A N I M E _ L O R D  イズ  ヒア
-▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
-   ╔╦╗┳ ┳╦ ╦╔═╗╔╗╔╔═╗╦ ╦
-    ║ ┃ ┃║ ║╠╣ ║║║║  ╠═╣
-    ╩ ┻ ┻╚═╝╚  ╝╚╝╚═╝╩ ╩
-""")  # Exact ASCII art as requested
-
         self.set_parse_mode(ParseMode.HTML)
         self.username = usr_bot_me.username
         self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..! ᴍᴀᴅᴇ ʙʏ @Aɴɪᴍᴇ Lᴏʀᴅ")   
@@ -84,6 +69,15 @@ class Bot(Client):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.start())
         self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ɴᴏᴡ ᴀʟɪᴠᴇ. ᴛʜᴀɴᴋꜱ ᴛᴏ @ᴡʜᴏ-ᴀᴍ-ɪ")
+        self.LOGGER(__name__).info(f"""
+▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄
+ A N I M E _ L O R D  イズ  ヒア
+▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
+   ╔╦╗┳ ┳╦ ╦╔═╗╔╗╔╔═╗╦ ╦
+    ║ ┃ ┃║ ║╠╣ ║║║║  ╠═╣
+    ╩ ┻ ┻╚═╝╚  ╝╚╝╚═╝╩ ╩
+""")  
+
         try:
             loop.run_forever()
         except KeyboardInterrupt:
