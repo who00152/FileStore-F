@@ -64,17 +64,17 @@ CMD_TXT = """<blockquote><b>» ᴀᴅᴍɪɴ ᴄᴏᴍᴍᴀɴᴅs:</b></blockqu
 <b>›› /admins :</b> ɢᴇᴛ ʟɪsᴛ ᴏꜰ ᴀᴅᴍɪɴs
 <b>›› /addpremium :</b> ᴀᴅᴅ ᴀ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ
 <b>›› /premium_users :</b> ʟɪsᴛ ᴀʟʟ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀs
-<b>›› /remove_premium :</b> ʀᴇᴍᴏ�{vᴇ ᴘʀᴇᴍɪᴜᴍ ꜰʀᴏᴍ ᴀ ᴜꜱᴇʀ
-<b>›› /myplan :</b> ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴘʀᴇᴍɪᴜᴍ sᴛᴀᴛᴜs
+<b>›› /remove_premium :</b> ʀᴇᴍᴏᴠᴇ ᴘʀᴇᴍɪᴜᴍ ꜰʀᴏᴍ ᴀ ᴜꜱᴇʀ
+<b>›› /myplan :</b> ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴘʀᴇᴮɪᴜᴍ sᴛᴀᴛᴜs
 <b>›› /pic :</b> ᴍᴀɴᴀɢᴇ ɪᴍᴀɢᴇꜱ ꜰᴏʀ sᴛᴀʀᴛ, ʜᴇʟᴘ, ᴀɴᴅ ᴀʙᴏᴜᴛ
 <b>›› /set_pic :</b> sᴇᴛ ɪᴍᴀɢᴇꜱ ꜰᴏʀ sᴛᴀʀᴛ, ʜᴇʟᴘ, ᴏʀ ᴀʙᴏᴜᴛ
 <b>›› /rev_pic :</b> ʀᴇᴍᴏᴠᴇ ɪᴍᴀɢᴇꜱ ꜰʀᴏᴍ sᴛᴀʀᴛ, ʜᴇʟᴘ, ᴏʀ ᴀʙᴏᴜᴛ
 <b>›› /rev_start <number> :</b> ʀᴇᴍᴏᴠᴇ ᴀ sᴘᴇᴄɪꜰɪᴄ sᴛᴀʀᴛ ɪᴍᴀɢᴇ
-<b>›› /rev_all_start :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ sᴛᴀʀᴛ ɪᴍᴀɢᴇꜱ
+<b>›› /rev_all_start :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ sᴛᴀʀᴛ ɪᴮɪᴍᴀɢᴇꜸ
 <b>›› /rev_help <number> :</b> ʀᴇᴍᴏᴠᴇ ᴀ sᴘᴇᴄɪꜰɪᴄ ʜᴇʟᴘ ɪᴍᴀɢᴇ
-<b>›› /rev_all_help :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ ʜᴇʟᴘ ɪᴍᴀɢᴇꜱ
+<b>›› /rev_all_help :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ ʜᴇʟᴘ ɪᴍᴀɢᴇꜸ
 <b>›› /rev_about <number> :</b> ʀᴇᴍᴏᴠᴇ ᴀ sᴘᴇᴄɪꜰɪᴄ ᴀʙᴏᴜᴛ ɪᴍᴀɢᴇ
-<b>›› /rev_all_about :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ ᴀʙᴏᴜᴛ ɪᴍᴀɢᴇꜱ"""
+<b>›› /rev_all_about :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ ᴀʙᴏᴜᴛ ɪᴍᴀɢᴇꜸ"""
 # --------------------------------------------
 CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", "<b>• ʙʏ @Anime_Lord_Official</b>")  # set your Custom Caption here, Keep None for Disable Custom Caption
 PROTECT_CONTENT = True if os.environ.get('PROTECT_CONTENT', "False") == "True" else False  # set True if you want to prevent users from forwarding files from bot
