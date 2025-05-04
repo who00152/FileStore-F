@@ -3,7 +3,6 @@ from os import environ, getenv
 import logging
 from logging.handlers import RotatingFileHandler
 from pyrogram import filters
-from database.database import db
 
 # MehediYT69
 # --------------------------------------------
@@ -22,7 +21,7 @@ PORT = os.environ.get("PORT", "8080")
 DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://animelord:animelord@animelord.1g3ujsr.mongodb.net/?retryWrites=true&w=majority&appName=animelord")
 DB_NAME = os.environ.get("DATABASE_NAME", "animelord")
 # --------------------------------------------
-FSUB_LINK_EXPIRY = int(os.getenv("FSUB_LINK_EXPIRY", "10"))  # 0 means no expiry
+FSUB_LINK_EXPIRY = int(getenv("FSUB_LINK_EXPIRY", "10"))  # 0 means no expiry
 BAN_SUPPORT = os.environ.get("BAN_SUPPORT", "https://t.me/CodeflixSupport")
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "200"))
 # --------------------------------------------
@@ -41,7 +40,6 @@ SHORTENER_PIC = os.environ.get("SHORTENER_PIC", "https://telegra.ph/file/ec17880
 # --------------------------------------------
 HELP_TXT = "<b><blockquote>◈ ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏᴛ ᴡᴏʀᴋ ғᴏʀ @MehediYT69\n\n❏ ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅs\n├/start : sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ\n├/about : ᴏᴜʀ Iɴғᴏʀᴍᴀᴛɪᴏɴ\n├/commands : ꜰᴏʀ ɢᴇᴛ ᴀʟʟ ᴀᴅᴍɪɴ ᴄᴏᴍᴍᴀɴᴅs ʟɪꜱᴛ\n└/help : ʜᴇʟᴘ ʀᴇʟᴀᴛᴇᴅ ʙᴏᴛ\n\n sɪᴍᴘʟʏ ᴄʟɪᴄᴋ ᴏɴ ʟɪɴᴋ ᴀɴᴅ sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ ᴊᴏɪɴ ʙᴏᴛʜ ᴄʜᴀɴɴᴇʟs ᴀɴᴅ ᴛʀʏ ᴀɢᴀɪɴ ᴛʜᴀᴛs ɪᴛ.....!\n\n ᴅᴇᴠᴇʟᴏᴘᴇᴅ ʙʏ <a href=https://t.me/cosmic_freak>Aɴɪᴍᴇ Lᴏʀᴅ</a></blockquote></b>"
 ABOUT_TXT = "<b><blockquote>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/cosmic_freak>MehediYT</a>\n◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/Anime_Lord_List>WHO-AM-I</a>\n◈ ᴀɴɪᴍᴇ ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/Anime_Lord_Official>Aɴɪᴍᴇ Lᴏʀᴅ</a>\n◈ sᴇʀɪᴇs ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/Anime_Lord_Series>Aɴɪᴍᴇ Lᴏʀᴅ sᴇʀɪᴇs ғʟɪx</a>\n◈ ᴀᴅᴜʟᴛ ᴍᴀɴʜᴡᴀ : <a href=https://t.me/Anime_Lord_Hentai>Aɴɪᴍᴇ Lᴏʀᴅ Pᴏʀɴʜᴡᴀs</a>\n◈ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/cosmic_freak>Aɴɪᴍᴇ Lᴏʀᴅ</a></blockquote></b>"
-# --------------------------------------------
 # --------------------------------------------
 START_MSG = os.environ.get("START_MESSAGE", "<b>ʜᴇʟʟᴏ {first}\n\n<blockquote> ɪ ᴀᴍ ғɪʟᴇ sᴛᴏʀᴇ ʙᴏᴛ ᴄʀᴇᴀᴛᴇᴅ ʙʏ  <a href=https://t.me/Anime_Lord_Official>Aɴɪᴍᴇ Lᴏʀᴅ</a>, ɪ ᴄᴀɴ sᴛᴏʀᴇ ᴘʀɪᴠᴀᴛᴇ ғɪʟᴇs ɪɴ sᴘᴇᴄɪғɪᴇᴅ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴏᴛʜᴇʀ ᴜsᴇʀs ᴄᴀɴ ᴀᴄᴄᴇss ɪᴛ ғʀᴏᴍ sᴘᴇᴄɪᴀʟ ʟɪɴᴋ.</blockquote></b>")
 FORCE_MSG = os.environ.get("FORCE_SUB_MESSAGE", "ʜᴇʟʟᴏ {first}\n\n<b>ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟs ᴀɴᴅ ᴛʜᴇɴ ᴄʟɪᴄᴋ ᴏɴ ʀᴇʟᴏᴀᴅ button ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ʀᴇǫᴜᴇꜱᴛᴇᴅ ꜰɪʟᴇ.</b>")
@@ -70,11 +68,11 @@ CMD_TXT = """<blockquote><b>» ᴀᴅᴍɪɴ ᴄᴏᴍᴍᴀɴᴅs:</b></blockqu
 <b>›› /set_pic :</b> sᴇᴛ ɪᴍᴀɢᴇꜱ ꜰᴏʀ sᴛᴀʀᴛ, ʜᴇʟᴘ, ᴏʀ ᴀʙᴏᴜᴛ
 <b>›› /rev_pic :</b> ʀᴇᴍᴏᴠᴇ ɪᴍᴀɢᴇꜱ ꜰʀᴏᴍ sᴛᴀʀᴛ, ʜᴇʟᴘ, ᴏʀ ᴀʙᴏᴜᴛ
 <b>›› /rev_start <number> :</b> ʀᴇᴍᴏᴠᴇ ᴀ sᴘᴇᴄɪꜰɪᴄ sᴛᴀʀᴛ ɪᴍᴀɢᴇ
-<b>›› /rev_all_start :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ sᴛᴀʀᴛ ɪᴮɪᴍᴀɢᴇꜸ
+<b>›› /rev_all_start :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ sᴛᴀʀᴛ ɪᴍᴀɢᴇꜱ
 <b>›› /rev_help <number> :</b> ʀᴇᴍᴏᴠᴇ ᴀ sᴘᴇᴄɪꜰɪᴄ ʜᴇʟᴘ ɪᴍᴀɢᴇ
-<b>›› /rev_all_help :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ ʜᴇʟᴘ ɪᴍᴀɢᴇꜸ
+<b>›› /rev_all_help :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ ʜᴇʟᴘ ɪᴍᴀɢᴇꜱ
 <b>›› /rev_about <number> :</b> ʀᴇᴍᴏᴠᴇ ᴀ sᴘᴇᴄɪꜰɪᴄ ᴀʙᴏᴜᴛ ɪᴍᴀɢᴇ
-<b>›› /rev_all_about :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ ᴀʙᴏᴜᴛ ɪᴍᴀɢᴇꜸ"""
+<b>›› /rev_all_about :</b> ʀᴇᴍᴏᴠᴇ ᴀʟʟ ᴀʙᴏᴜᴛ ɪᴍᴀɢᴇꜱ"""
 # --------------------------------------------
 CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", "<b>• ʙʏ @Anime_Lord_Official</b>")  # set your Custom Caption here, Keep None for Disable Custom Caption
 PROTECT_CONTENT = True if os.environ.get('PROTECT_CONTENT', "False") == "True" else False  # set True if you want to prevent users from forwarding files from bot
