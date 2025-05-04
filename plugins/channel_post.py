@@ -19,14 +19,14 @@ from bot import Bot
 from config import *
 from helper_func import encode, admin
 
-@Bot.on_message(filters.private & admin & ~filters.command(['start', 'commands','users','broadcast','batch', 'custom_batch', 'genlink','stats', 'dlt_time', 'check_dlt_time', 'dbroadcast', 'ban', 'unban', 'banlist', 'addchnl', 'delchnl', 'listchnl', 'fsub_mode', 'pbroadcast', 'add_admin', 'deladmin', 'admins', 'addpremium', 'premium_users', 'remove_premium', 'myplan', 'count']))
+@Bot.on_message(filters.private & admin & filters.command('postlink'))
 async def channel_post(client: Client, message: Message):
-    reply_text = await message.reply_text("ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...!", quote = True)
+    reply_text = await message.reply_text("ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ...!", quote=True)
     try:
-        post_message = await message.copy(chat_id = client.db_channel.id, disable_notification=True)
+        post_message = await message.copy(chat_id=client.db_channel.id, disable_notification=True)
     except FloodWait as e:
         await asyncio.sleep(e.x)
-        post_message = await message.copy(chat_id = client.db_channel.id, disable_notification=True)
+        post_message = await message.copy(chat_id=client.db_channel.id, disable_notification=True)
     except Exception as e:
         print(e)
         await reply_text.edit_text("ꜱᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ...!")
@@ -38,7 +38,7 @@ async def channel_post(client: Client, message: Message):
 
     reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 ꜱʜᴀʀᴇ ᴜʀʟ", url=f'https://telegram.me/share/url?url={link}')]])
 
-    await reply_text.edit(f"<b>ʜᴇʀᴇ ɪꜱ ʏᴏᴜʀ ʟɪɴᴋ</b>\n\n{link}", reply_markup=reply_markup, disable_web_page_preview = True)
+    await reply_text.edit(f"<b>ʜᴇʀᴇ ɪꜱ ʏᴏᴜʀ ʟɪɴᴋ</b>\n\n{link}", reply_markup=reply_markup, disable_web_page_preview=True)
 
     if not DISABLE_CHANNEL_BUTTON:
         await post_message.edit_reply_markup(reply_markup)
