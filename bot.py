@@ -2,6 +2,7 @@ import os
 import sys
 import asyncio
 import logging
+import signal
 from pyrogram import Client, filters
 from pyrogram.handlers import MessageHandler
 from config import API_HASH, APP_ID, LOGGER, OWNER_ID, TG_BOT_TOKEN, TG_BOT_WORKERS, CHANNEL_ID, PORT, DB_URI, DB_NAME
@@ -50,18 +51,38 @@ class Bot(Client):
 app = Bot()
 
 async def main():
+    # Initialize bot
     await app.start()
+    
+    # Setup web server
     port = int(os.environ.get("PORT", PORT))
-    try:
-        server = web.AppRunner(await web_server())
-        await server.setup()
-        await web.TCPSite(server, "0.0.0.0", port).start()
-        await asyncio.Event().wait()
-    finally:
-        await app.stop()
+    runner = web.AppRunner(await web_server())
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    
+    # Signal handling for graceful shutdown
+    loop = asyncio.get_running_loop()
+    shutdown_event = asyncio.Event()
+    
+    def signal_handler(sig):
+        loop.call_soon_threadsafe(shutdown_event.set)
+    
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        loop.add_signal_handler(sig, signal_handler, sig)
+    
+    # Wait for shutdown signal
+    await shutdown_event.wait()
+    
+    # Cleanup
+    await site.stop()
+    await runner.cleanup()
+    await app.stop()
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
-    except (KeyboardInterrupt, SystemExit):
-        LOGGER(__name__).info("Bot stopped!")
+    except KeyboardInterrupt:
+        pass
+    finally:
+        logging.info("Bot has been gracefully terminated.")
