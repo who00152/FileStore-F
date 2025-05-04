@@ -1,14 +1,4 @@
-# Don't Remove Credit @CodeFlix_Bots, @rohit_1888
-# Ask Doubt on telegram @CodeflixSupport
-#
-# Copyright (C) 2025 by Codeflix-Bots@Github, < https://github.com/Codeflix-Bots >.
-#
-# This file is part of < https://github.com/Codeflix-Bots/FileStore > project,
-# and is released under the MIT License.
-# Please see < https://github.com/Codeflix-Bots/FileStore/blob/master/LICENSE >
-#
-# All rights reserved.
-#
+# start.py
 
 import asyncio
 import os
@@ -55,14 +45,12 @@ async def short_url(client: Client, message: Message, base64_string):
 
         await message.reply_photo(
             photo=SHORTENER_PIC,
-            caption=SHORT_MSG.format(
-            ),
+            caption=SHORT_MSG.format(),
             reply_markup=InlineKeyboardMarkup(buttons),
         )
 
     except IndexError:
         pass
-
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def start_command(client: Client, message: Message):
@@ -213,6 +201,10 @@ async def start_command(client: Client, message: Message):
         await asyncio.sleep(1)
         await m.delete()
 
+        # Get random image from database
+        start_images = await db.get_images("start")
+        photo = random.choice(start_images) if start_images else START_PIC
+
         reply_markup = InlineKeyboardMarkup(
             [
                 [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/Nova_Flix/50")],
@@ -223,7 +215,7 @@ async def start_command(client: Client, message: Message):
             ]
         )
         await message.reply_photo(
-            photo=START_PIC,
+            photo=photo,
             caption=START_MSG.format(
                 first=message.from_user.first_name,
                 last=message.from_user.last_name,
@@ -236,14 +228,7 @@ async def start_command(client: Client, message: Message):
         )
         return
 
-
 #=====================================================================================##
-# Don't Remove Credit @CodeFlix_Bots, @rohit_1888
-# Ask Doubt on telegram @CodeflixSupport
-
-
-# Create a global dictionary to store chat data
-chat_data_cache = {}
 
 async def not_joined(client: Client, message: Message):
     temp = await message.reply("<b><i>ᴄʜᴇᴄᴋɪɴɢ ꜱᴜʙꜱᴄʀɪᴘᴛɪᴏɴ...</i></b>")
@@ -253,15 +238,14 @@ async def not_joined(client: Client, message: Message):
     count = 0
 
     try:
-        all_channels = await db.show_channels()  # Should return list of (chat_id, mode) tuples
+        all_channels = await db.show_channels()
         for total, chat_id in enumerate(all_channels, start=1):
-            mode = await db.get_channel_mode(chat_id)  # fetch mode 
+            mode = await db.get_channel_mode(chat_id)
 
             await message.reply_chat_action(ChatAction.TYPING)
 
             if not await is_sub(client, user_id, chat_id):
                 try:
-                    # Cache chat info
                     if chat_id in chat_data_cache:
                         data = chat_data_cache[chat_id]
                     else:
@@ -270,22 +254,21 @@ async def not_joined(client: Client, message: Message):
 
                     name = data.title
 
-                    # Generate proper invite link based on the mode
                     if mode == "on" and not data.username:
                         invite = await client.create_chat_invite_link(
                             chat_id=chat_id,
                             creates_join_request=True,
                             expire_date=datetime.utcnow() + timedelta(seconds=FSUB_LINK_EXPIRY) if FSUB_LINK_EXPIRY else None
-                            )
+                        )
                         link = invite.invite_link
-
                     else:
                         if data.username:
                             link = f"https://t.me/{data.username}"
                         else:
                             invite = await client.create_chat_invite_link(
                                 chat_id=chat_id,
-                                expire_date=datetime.utcnow() + timedelta(seconds=FSUB_LINK_EXPIRY) if FSUB_LINK_EXPIRY else None)
+                                expire_date=datetime.utcnow() + timedelta(seconds=FSUB_LINK_EXPIRY) if FSUB_LINK_EXPIRY else None
+                            )
                             link = invite.invite_link
 
                     buttons.append([InlineKeyboardButton(text=name, url=link)])
@@ -299,7 +282,6 @@ async def not_joined(client: Client, message: Message):
                         f"<blockquote expandable><b>Rᴇᴀsᴏɴ:</b> {e}</blockquote>"
                     )
 
-        # Retry Button
         try:
             buttons.append([
                 InlineKeyboardButton(
@@ -333,16 +315,12 @@ async def not_joined(client: Client, message: Message):
 
 @Bot.on_message(filters.command('myplan') & filters.private)
 async def check_plan(client: Client, message: Message):
-    user_id = message.from_user.id  # Get user ID from the message
-
-    # Get the premium status of the user
+    user_id = message.from_user.id
     status_message = await check_user_plan(user_id)
-
-    # Send the response message to the user
     await message.reply(status_message)
 
 #=====================================================================================##
-# Command to add premium user
+
 @Bot.on_message(filters.command('addpremium') & filters.private & admin)
 async def add_premium_user_command(client, msg):
     if len(msg.command) != 4:
@@ -365,18 +343,15 @@ async def add_premium_user_command(client, msg):
     try:
         user_id = int(msg.command[1])
         time_value = int(msg.command[2])
-        time_unit = msg.command[3].lower()  # supports: s, m, h, d, y
+        time_unit = msg.command[3].lower()
 
-        # Call add_premium function
         expiration_time = await add_premium(user_id, time_value, time_unit)
 
-        # Notify the admin
         await msg.reply_text(
             f"✅ ᴜꜱᴇʀ `{user_id}` ᴀᴅᴅᴇᴅ ᴀꜱ ᴀ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ ꜰᴏʀ {time_value} {time_unit}.\n"
             f"ᴇxᴘɪʀᴀᴛɪᴏɴ ᴛɪᴍᴇ: `{expiration_time}`"
         )
 
-        # Notify the user
         await client.send_message(
             chat_id=user_id,
             text=(
@@ -391,8 +366,8 @@ async def add_premium_user_command(client, msg):
     except Exception as e:
         await msg.reply_text(f"⚠️ ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ: `{str(e)}`")
 
+#=====================================================================================##
 
-# Command to remove premium user
 @Bot.on_message(filters.command('remove_premium') & filters.private & admin)
 async def pre_remove_user(client: Client, msg: Message):
     if len(msg.command) != 2:
@@ -405,42 +380,32 @@ async def pre_remove_user(client: Client, msg: Message):
     except ValueError:
         await msg.reply_text("ᴜꜱᴇʀ_ɪᴅ ᴍᴜꜱᴛ ʙᴇ ᴀɴ ɪɴᴛᴇɢᴇʀ ᴏʀ ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ ɪɴ ᴅᴀᴛᴀʙᴀꜱᴇ.")
 
+#=====================================================================================##
 
-# Command to list active premium users
 @Bot.on_message(filters.command('premium_users') & filters.private & admin)
 async def list_premium_users_command(client, message):
-    # Define IST timezone
     ist = timezone("Asia/Kolkata")
-
-    # Retrieve all users from the collection
     premium_users_cursor = collection.find({})
     premium_user_list = ['Active Premium Users in database:']
-    current_time = datetime.now(ist)  # Get current time in IST
+    current_time = datetime.now(ist)
 
-    # Use async for to iterate over the async cursor
     async for user in premium_users_cursor:
         user_id = user["user_id"]
         expiration_timestamp = user["expiration_timestamp"]
 
         try:
-            # Convert expiration_timestamp to a timezone-aware datetime object in IST
             expiration_time = datetime.fromisoformat(expiration_timestamp).astimezone(ist)
-
-            # Calculate remaining time
             remaining_time = expiration_time - current_time
 
             if remaining_time.total_seconds() <= 0:
-                # Remove expired users from the database
                 await collection.delete_one({"user_id": user_id})
-                continue  # Skip to the next user if this one is expired
+                continue
 
-            # If not expired, retrieve user info
             user_info = await client.get_users(user_id)
             username = user_info.username if user_info.username else "No Username"
             first_name = user_info.first_name
-            mention=user_info.mention
+            mention = user_info.mention
 
-            # Calculate days, hours, minutes, seconds left
             days, hours, minutes, seconds = (
                 remaining_time.days,
                 remaining_time.seconds // 3600,
@@ -449,7 +414,6 @@ async def list_premium_users_command(client, message):
             )
             expiry_info = f"{days}d {hours}h {minutes}m {seconds}s left"
 
-            # Add user details to the list
             premium_user_list.append(
                 f"ᴜꜱᴇʀɪᴅ: <code>{user_id}</code>\n"
                 f"ᴜꜱᴇʀ: @{username}\n"
@@ -462,11 +426,10 @@ async def list_premium_users_command(client, message):
                 f"ᴇʀʀᴏʀ: Unable to fetch user details ({str(e)})"
             )
 
-    if len(premium_user_list) == 1:  # No active users found
+    if len(premium_user_list) == 1:
         await message.reply_text("ɪ ꜰᴏᴜɴᴅ 0 ᴀᴄᴛɪᴠᴇ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀꜱ ɪɴ ᴍʏ ᴅʙ")
     else:
         await message.reply_text("\n\n".join(premium_user_list), parse_mode=None)
-
 
 #=====================================================================================##
 
@@ -475,10 +438,9 @@ async def total_verify_count_cmd(client, message: Message):
     total = await db.get_total_verify_count()
     await message.reply_text(f"Tᴏᴛᴀʟ ᴠᴇʀɪғɪᴇᴅ ᴛᴏᴋᴇɴs ᴛᴏᴅᴀʏ: <b>{total}</b>")
 
-
 #=====================================================================================##
 
 @Bot.on_message(filters.command('commands') & filters.private & admin)
 async def bcmd(bot: Bot, message: Message):        
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data = "close")]])
-    await message.reply(text=CMD_TXT, reply_markup = reply_markup, quote= True)
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data="close")]])
+    await message.reply(text=CMD_TXT, reply_markup=reply_markup, quote=True)
