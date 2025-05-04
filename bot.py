@@ -1,10 +1,8 @@
-# bot.py
-
 from aiohttp import web
 from plugins import web_server
 import asyncio
 import pyromod.listen
-from pyrogram import Client, filters  # Added filters import
+from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
 import sys
 from datetime import datetime
