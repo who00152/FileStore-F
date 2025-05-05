@@ -6,12 +6,10 @@ from pyrogram import Client
 from pyrogram.enums import ParseMode
 import sys
 from datetime import datetime
-#Aɴɪᴍᴇ Lᴏʀᴅ
+#ᴀɴɪᴍᴇ ʟᴏʀᴅ
 from config import *
 
-name = """
-A N I M E _ L O R D  イズ  ヒア
-"""
+name = """A N I M E _ L O R D  イズ  ヒア"""
 
 class Bot(Client):
     def __init__(self):
@@ -39,57 +37,57 @@ class Bot(Client):
             await test.delete()
         except Exception as e:
             self.LOGGER(__name__).warning(e)
-            self.LOGGER(__name__).warning(f"ᴍᴀᴋᴇ ꜱᴜʀᴇ ʙᴏᴛ ɪꜱ ᴀᴅᴍɪɴ ɪɴ ᴅʙ ᴄʜᴀɴɴᴇʟ, ᴀɴᴅ ᴅᴏᴜʙʟᴇ ᴄʜᴇᴄᴋ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ_ɪᴅ ᴠᴀʟᴜᴇ, ᴄᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ {CHANNEL_ID}")
-            self.LOGGER(__name__).info("\nʙᴏᴛ ꜱᴛᴏᴘᴘᴇᴅ. ᴊᴏɪɴ https://t.me/+3lpawaYvxBU4YTY1 ꜰᴏʀ ꜱᴜᴘᴘᴏʀᴛ")
+            self.LOGGER(__name__).warning(f"ᴍᴀᴋᴇ sᴜʀᴇ ʙᴏᴛ ɪs ᴀᴅᴍɪɴ ɪɴ ᴅʙ ᴄʜᴀɴɴᴇʟ, ᴀɴᴅ ᴅᴏᴜʙʟᴇ ᴄʜᴇᴄᴋ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ_ɪᴅ ᴠᴀʟᴜᴇ, ᴄᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ {CHANNEL_ID}")
+            self.LOGGER(__name__).info("\nʙᴏᴛ sᴛᴏᴘᴘᴇᴅ. ᴊᴏɪɴ https://t.me/+3lpawaYvxBU4YTY1 ғᴏʀ sᴜᴘᴘᴏʀᴛ")
             sys.exit()
 
         self.set_parse_mode(ParseMode.HTML)
-        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..!\n\nᴄʀᴇᴀᴛᴇᴅ ʙʏ \n ᴡʜᴏ-ᴀᴍ-ɪ")
+        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪs ᴀʟɪᴠᴇ..!\n\nᴄʀᴇᴀᴛᴇᴅ ʙʏ \n ᴡʜᴏ-ᴀᴍ-ɪ")
         self.LOGGER(__name__).info(f"ʙᴏᴛ ᴅᴇᴘʟᴏʏᴇᴅ ʙʏ @ᴡʜᴏ-ᴀᴍ-ɪ")
         self.set_parse_mode(ParseMode.HTML)
         self.username = usr_bot_me.username
-        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ᴀʟɪᴠᴇ..! ᴍᴀᴅᴇ ʙʏ @Aɴɪᴍᴇ Lᴏʀᴅ")   
+        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪs ᴀʟɪᴠᴇ..! ᴍᴀᴅᴇ ʙʏ @ᴀɴɪᴍᴇ ʟᴏʀᴅ")   
 
-        # Start Web Server
+        # sᴛᴀʀᴛ ᴡᴇʙ sᴇʀᴠᴇʀ
         app = web.AppRunner(await web_server())
         await app.setup()
         await web.TCPSite(app, "0.0.0.0", PORT).start()
 
         try:
-            await self.send_message(OWNER_ID, text=f"<b><blockquote>Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ by @Anime_Lord_Bot\n\n<code>{name}</code></blockquote></b>")
+            await self.send_message(OWNER_ID, text=f"<b><blockquote>ʙᴏᴛ ʀᴇsᴛᴀʀᴛᴇᴅ ʙʏ @ᴀɴɪᴍᴇ_ʟᴏʀᴅ_ʙᴏᴛ\n\n<code>{name}</code></blockquote></b>")
         except Exception as e:
-            self.LOGGER(__name__).warning(f"Failed to send startup message to OWNER_ID: {str(e)}")
+            self.LOGGER(__name__).warning(f"ғᴀɪʟᴇᴅ ᴛᴏ sᴇɴᴅ sᴛᴀʀᴛᴜᴘ ᴍᴇssᴀɢᴇ ᴛᴏ OWNER_ID: {str(e)}")
 
     async def stop(self, *args):
         await super().stop()
-        self.LOGGER(__name__).info("ʙᴏᴛ ꜱᴛᴏᴘᴘᴇᴅ.")
+        self.LOGGER(__name__).info("ʙᴏᴛ sᴛᴏᴘᴘᴇᴅ.")
 
     def run(self):
         """Run the bot."""
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.start())
-        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪꜱ ɴᴏᴡ ᴀʟɪᴠᴇ. ᴛʜᴀɴᴋꜱ ᴛᴏ @ᴡʜᴏ-ᴀᴍ-ɪ")
+        self.LOGGER(__name__).info(f"ʙᴏᴛ ɪs ɴᴏᴡ ᴀʟɪᴠᴇ. ᴛʜᴀɴᴋs ᴛᴏ @ᴡʜᴏ-ᴀᴍ-ɪ")
         self.LOGGER(__name__).info(f"""
 ▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄
- A N I M E _ L O R D  イズ  ヒア
+      A N I M E _ L O R D  イズ  ヒア
 ▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀
-   ╔╦╗┳ ┳╦ ╦╔═╗╔╗╔╔═╗╦ ╦
-    ║ ┃ ┃║ ║╠╣ ║║║║  ╠═╣
-    ╩ ┻ ┻╚═╝╚  ╝╚╝╚═╝╩ ╩
+       ◈◈◈◈◈◈ ɪ_s_ʜ_ᴇ_ʀ_ᴇ ◈◈◈◈◈◈  
+              ▼ ᴀᴄᴄᴇssɪɴɢ ▼  
+                 ███████] 99%  
 """)  
 
         try:
             loop.run_forever()
         except KeyboardInterrupt:
-            self.LOGGER(__name__).info("ꜰᴜᴄᴋɪɴ ᴅᴏᴡɴ...")
+            self.LOGGER(__name__).info("ғᴜᴄᴋɪɴ ᴅᴏᴡɴ...")
         finally:
             loop.run_until_complete(self.stop())
 
 #
-# Copyright (C) 2025 by Codeflix-Bots@Github, < https://github.com/Codeflix-Bots >.
+# ᴄᴏᴘʏʀɪɢʜᴛ (ᴄ) 2025 ʙʏ ᴄᴏᴅᴇғʟɪx-ʙᴏᴛs@ɢɪᴛʜᴜʙ, < https://github.com/ᴄᴏᴅᴇғʟɪx-ʙᴏᴛs >.
 #
-# This file is part of < https://github.com/Codeflix-Bots/FileStore > project,
-# and is released under the MIT License.
-# Please see < https://github.com/Codeflix-Bots/FileStore/blob/master/LICENSE >
+# ᴛʜɪs ғɪʟᴇ ɪs ᴘᴀʀᴛ ᴏғ < https://github.com/ᴄᴏᴅᴇғʟɪx-ʙᴏᴛs/ғɪʟᴇsᴛᴏʀᴇ > ᴘʀᴏᴊᴇᴄᴛ,
+# ᴀɴᴅ ɪs ʀᴇʟᴇᴀsᴇᴅ ᴜɴᴅᴇʀ ᴛʜᴇ ᴍɪᴛ ʟɪᴄᴇɴsᴇ.
+# ᴘʟᴇᴀsᴇ sᴇᴇ < https://github.com/ᴄᴏᴅᴇғʟɪx-ʙᴏᴛs/ғɪʟᴇsᴛᴏʀᴇ/ʙʟᴏʙ/ᴍᴀsᴛᴇʀ/ʟɪᴄᴇɴsᴇ >
 #
-# All rights reserved.
+# ᴀʟʟ ʀɪɢʜᴛs ʀᴇsᴇʀᴠᴇᴅ.
